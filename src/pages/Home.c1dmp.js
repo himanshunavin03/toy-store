@@ -2,9 +2,16 @@
 // “Hello, World!” Example: https://learn-code.wix.com/en/article/hello-world
 
 $w.onReady(function () {
-    // Write your JavaScript here
+    // Only replace the confirmed template hero; keep the existing image/layout.
+    const heroTexts = [$w('#text18'), $w('#text17')];
+    const heading = heroTexts.find((element) => /Handcrafted\s+Wooden\s+Toys/i.test(element.text));
+    if (!heading) return;
 
-    // To select an element by ID use: $w('#elementID')
+    const supportingCopy = heroTexts.find((element) => element !== heading);
+    heading.text = 'Little Things. Happy Vibes.';
+    supportingCopy.text = 'Bags, toys, school essentials and gifts for every little adventure.';
 
-    // Click 'Preview' to run your code
+    const shopButton = $w('#button6');
+    shopButton.label = 'Shop Now';
+    shopButton.link = '/category/anh-vibes-school-bags';
 });

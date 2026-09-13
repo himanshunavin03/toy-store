@@ -15,28 +15,28 @@ This is the persistent project memory and handoff document. Future Codex session
 
 This is a Wix Git Integration & Wix CLI repository for Velo site code, not a standalone React storefront. The checked-in application surface is page-level JavaScript under `src/pages`, shared page code in `masterPage.js`, optional backend/public code folders, Wix CLI configuration, and a development-only catalog seed script under `scripts/`. The visual page structure, embedded app widgets, widget configuration, and store data are not represented as editable application source here.
 
-The only executable statement in each page-code file is an empty `$w.onReady()` callback. There are no application imports, exports, API calls, event handlers, data queries, or calls between page, public, and backend modules. Wix-generated, ignored `.wix/types/` declarations list editor elements and provide limited evidence of the site design. They are generated local metadata, not proof of configured or working live behavior.
+As of the UI MVP change, Home page code and `masterPage.js` set selected text, the hero button, and the desktop menu at runtime. The other 15 page-code files remain empty starter callbacks. There are no application imports, backend/public calls, data queries, or custom commerce calls. Wix-generated, ignored `.wix/types/` declarations list editor elements and provide limited evidence of the site design. They are generated local metadata, not proof of configured or working live behavior.
 
 Observed source path:
 
 ```text
 Wix page or embedded widget
-  -> matching src/pages/*.js / masterPage.js
-  -> empty $w.onReady()
+  -> Home.c1dmp.js / masterPage.js set selected $w text, button, and menu at runtime
+  -> other page callbacks remain empty
   -> no custom public/backend module
-  -> no Wix Stores, eCommerce, Members, or CMS API call in repository code
+  -> no Wix Stores, eCommerce, Members, or CMS API call in visitor code
 ```
 
-Wix-managed widget behavior may run independently of these empty callbacks. Its data flow and runtime result cannot be traced from the repository. The separate CLI seeder talks directly to the connected Wix site via official Catalog V3 REST APIs; it is not part of visitor page execution.
+Wix-managed widget behavior may run independently of the page callbacks. Its data flow and runtime result cannot be traced from the repository. The separate CLI seeder talks directly to the connected Wix site via official Catalog V3 REST APIs; it is not part of visitor page execution.
 
 ## Current Application State
 
-- Sixteen named page-code files and one `masterPage.js` exist. All 17 are identical 10-line Wix starter stubs; none implements custom Velo behavior.
+- Sixteen named page-code files and one `masterPage.js` exist. Home and shared code now have a minimal runtime copy/navigation update; the other 15 page-code files remain starter stubs.
 - Generated element declarations identify a category-page iframe, cart and checkout iframes, side-cart and success-popup iframes/controllers, a thank-you iframe, wishlist and order-history iframes, and shared cart/member/navigation elements.
 - Home has generated declarations for two repeaters, a gallery iframe, images, text, and a button. Their content, links, and editor bindings are unknown.
 - The Product Page declaration identifies a slider-gallery iframe but does not establish product data binding, options, pricing, or add-to-cart behavior.
 - No custom backend or public modules exist. `src/backend/permissions.json` has an allow-all wildcard default for anonymous visitors, site members, and owners; currently there are no web methods to invoke.
-- No page/backend Velo SDK/API integration, CMS collection declaration, dataset ID, or order-handling code is checked in. A development-only CLI script now uses Wix REST APIs to set up catalog records in the connected site.
+- No visitor-code Wix Stores/eCommerce SDK integration, CMS collection declaration, dataset ID, or order-handling code is checked in. A development-only CLI script previously set up catalog records in the connected site; do not rerun it for the UI task.
 - The presence of widget elements is evidence of a Wix-managed UI surface, not evidence that checkout or any other commerce operation currently works.
 
 ## Connected Wix MVP Implementation Status
@@ -46,6 +46,8 @@ Wix-managed widget behavior may run independently of these empty callbacks. Its 
 **Architecture selected:** Wix Stores Catalog V3 categories/products/inventory are the system of record. `scripts/seed-catalog.mjs` is a local, backend-oriented development utility using the Wix CLI's site-scoped token and Wix REST endpoints. It defaults to a read-only plan; writes require `--apply --site-id <configured-site-id>`, a V3/CAD check, and an unpublished-site check. It checks existing names/handles and category parents, creates missing records, and makes no deletion or update to unrelated records. No public web method or CMS collection was introduced, so `src/backend/permissions.json` was not changed; its permissive wildcard remains a future risk if web methods are added.
 
 **Catalog state verified after seeding:** 7 new AnH Vibes main categories and all 36 planned subcategories exist in Wix's native category tree. Fourteen distinct AnH Vibes demo products exist with original development copy, CAD variant prices, `IN_STOCK` status, and direct assignment to one planned subcategory each. Wix's pre-existing 6 categories and 13 unrelated products were retained, so the connected catalog now contains 49 categories and 27 products total. The existing `All Products` Wix category also contains the new products. A second and third apply run created **0 categories, 0 products, and 0 category assignments**; 14 products were reused. API reads verified all 14 demo products' currency, visibility, inventory status, description, price presence, and subcategory IDs.
+
+**UI-phase category connection (2026-09-13):** A read-only `List Items In Category` check found zero direct products in the main categories, even though the subcategories held the demos. Wix documents that a parent may show zero products in that situation. After checking the exact site, Catalog V3/CAD/unpublished state, category IDs, 14 demo identities, leaf assignments, and absence of parent assignments, 14 existing demo products were added to their seven matching parent categories through the official category item API. This did not create/seed any product or category, change prices or primary leaf categories, delete data, or touch unrelated products. A separate API read verified exactly two demo product IDs directly assigned to each main category; leaf assignments remain intact. Widget rendering remains a Preview check.
 
 | Main category > demo subcategory | Demo products and CAD prices |
 | --- | --- |
@@ -59,11 +61,11 @@ Wix-managed widget behavior may run independently of these empty callbacks. Its 
 
 **Media and variants:** No retailer imagery or placeholder files were imported. The seed creates one priced physical variant and an in-stock inventory item per demo product; it does not define option choices. When original/licensed images are ready, attach them to these existing Wix product IDs through Wix Media and [Product Media](https://dev.wix.com/docs/api-reference/business-solutions/stores/catalog-v3/products-v3/introduction) operations or the Wix dashboard, then verify product cards and galleries. Product descriptions are explicitly marked as development demos; specifications and actual stock must be confirmed before a real launch.
 
-**Status labels:** Catalog taxonomy, demo products, CAD prices, basic inventory, and seed idempotence are **VERIFIED** by Wix API reads. The seeder and `wix dev` startup/type sync are **VERIFIED** locally. Category/product page rendering, Product → Cart → Checkout, payment/shipping configuration, member/wishlist/orders, and Wix Studio navigation are **NOT YET VERIFIED** in an interactive browser. Site branding, original media, themes, and storefront navigation are **NOT YET IMPLEMENTED**. Do not claim a working checkout until a Wix preview walk-through confirms it.
+**Status labels:** Catalog taxonomy, demo products, CAD prices, basic inventory, and seed idempotence are **VERIFIED** by Wix API reads. The seeder and `wix dev` startup/type sync are **VERIFIED** locally. Runtime code now proposes AnH Vibes copy and desktop navigation, but its visual result and site-specific links are **NOT YET VERIFIED** in Preview. Category/product page rendering, Product → Cart → Checkout, payment/shipping configuration, member/wishlist/orders, and Wix Studio navigation are also **NOT YET VERIFIED** in an interactive browser. Original media and themes are **NOT YET IMPLEMENTED**. Do not claim a working checkout until a Wix preview walk-through confirms it.
 
 **Official API capability map used for planning:** Catalog V3 supports [product creation/update and descriptions/prices/options](https://dev.wix.com/docs/api-reference/business-solutions/stores/catalog-v3/products-v3/introduction), [product media](https://dev.wix.com/docs/api-reference/business-solutions/stores/catalog-v3/products-v3/about-product-media), [physical product plus inventory creation](https://dev.wix.com/docs/api-reference/business-solutions/stores/catalog-v3/products-v3/create-product-with-inventory), and [hierarchical categories plus assignments](https://dev.wix.com/docs/api-reference/business-solutions/stores/catalog-v3/categories/introduction); those areas were used only to the extent described above. No CMS collection was required because native catalog entities cover the MVP. Wix has [CMS collection/data-item APIs](https://dev.wix.com/docs/api-reference/business-solutions/cms/data-items/insert-data-item) if a later custom-data requirement warrants them. For any future custom cart flow, Wix's [Cart V2](https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/purchase-flow/cart-v2/introduction) is the current API for cart through order placement; the older separate Cart/Checkout APIs are scheduled for removal on February 1, 2027. Standard online [orders are created through checkout](https://dev.wix.com/docs/api-reference/business-solutions/e-commerce/orders/orders/create-order?apiView=SDK). None of these cart, checkout, order, or CMS APIs is called by this repository; Wix-managed widgets remain the intended visitor flow.
 
-**Minimum Wix Studio/Dashboard checks before calling this a working storefront:** (1) In the Local Editor/Studio preview, open a new category and one of its products; confirm the native category widget lists the seeded products and the product page shows the CAD price and add-to-cart control. (2) Add a demo item to the native cart and advance into Wix checkout without making an unapproved paid purchase; note any missing shipping, tax, payment, or member settings. (3) Configure links to the seven categories in the existing Wix menu as needed; no navigation was changed by this implementation. (4) Attach original/licensed product media to the 14 demo items; no image was copied from a retailer. (5) Decide how to handle the 13 unrelated pre-existing products and their old categories before launch; they were deliberately left intact. (6) Confirm all development descriptions, demo prices, and artificial in-stock flags are replaced with approved sellable data before publication.
+**Minimum Wix Studio/Dashboard checks before calling this a working storefront:** (1) In Local Editor Preview, verify the new runtime brand, hero, button, desktop menu, and category links; the saved Editor canvas may still show Poppy & Lily until manually edited. (2) Open a new category and one of its products; confirm the native category widget lists the seeded products and the product page shows the CAD price and add-to-cart control. (3) Add a demo item to the native cart and advance into Wix checkout without making an unapproved paid purchase; note missing shipping, tax, payment, or member settings. (4) Update the Editor's saved text/menu content and mobile menu as described in the UI control-boundary section below. (5) Attach original/licensed product media later; none was copied from a retailer. (6) Decide how to handle the 13 unrelated pre-existing products and confirm development descriptions/prices/artificial stock before publication.
 
 ## AnH Vibes Product Vision & Requirements
 
@@ -119,11 +121,11 @@ Create or properly license an original AnH Vibes logo, hero banners, category gr
 
 ## Pages
 
-Each page listed below has only the empty starter callback. Responsibilities are indicated by page names and, where noted, generated element types; actual live settings need inspection.
+Home and masterPage now contain the limited runtime UI updates described below. All other page-code files retain empty starter callbacks. Responsibilities are indicated by page names and, where noted, generated element types; actual live settings need inspection.
 
 | Page file | Discoverable role / element evidence |
 | --- | --- |
-| `Home.c1dmp.js` | Home/landing page; two repeaters and a grid-gallery iframe appear in generated types. |
+| `Home.c1dmp.js` | Home/landing page; conditionally updates the old hero title/supporting copy and CTA in Preview. Two repeaters and a grid-gallery iframe appear in generated types. |
 | `Category Page.pdx15.js` | Category browsing; `#categoryPage1` iframe. |
 | `Product Page.lrp4k.js` | Product-detail destination by name; `#sliderGallery1` iframe is the only product-adjacent element identified by generated types. |
 | `Cart Page.v8jzb.js` | Cart destination; `#shoppingCart1` iframe. |
@@ -139,7 +141,7 @@ Each page listed below has only the empty starter callback. Responsibilities are
 | `Shipping Policy.qhhyn.js` | Policy page; displayed copy is not in page code. |
 | `Terms & Conditions.lr953.js` | Policy page; displayed copy is not in page code. |
 | `Accessibility Statement.t3gbt.js` | Accessibility page; displayed copy is not in page code. |
-| `masterPage.js` | Shared page code; generated types show horizontal and hamburger menus, cart icon iframe, two member-login widgets, account navigation bars, and a Wix Forms V2 element. |
+| `masterPage.js` | Shared page code; conditionally replaces Poppy & Lily text and sets a six-item desktop menu with a More submenu. Generated types show a horizontal menu and hamburger-related containers, cart icon iframe, two member-login widgets, account navigation bars, and a Wix Forms V2 element. |
 
 ## E-Commerce Flow
 
@@ -158,7 +160,7 @@ Wix-managed widgets may supply parts or all of this flow outside repository code
 | Path | Purpose and current contents |
 | --- | --- |
 | `src/pages/` | Sixteen page Velo JavaScript files, `masterPage.js`, and a Wix-generated explanatory README. Page filenames contain Wix internal IDs; keep names intact so Wix associates code with the intended page. The README says new pages are created in the Wix editor and synced to the IDE. |
-| `src/pages/masterPage.js` | Shared/global page callback; currently empty. Shared UI elements are only visible through generated types. |
+| `src/pages/masterPage.js` | Shared/global page callback; updates matching template brand text and the desktop horizontal menu at runtime. Mobile menu editor configuration remains unverified. |
 | `src/backend/` | README and `permissions.json` only. No `.js`, `.jsw`, `.web.js`, data hooks, routers, event handlers, HTTP functions, or jobs are present. |
 | `src/public/` | README only; no shared frontend modules. |
 | `scripts/seed-catalog.mjs` | Development-only Wix Catalog V3 REST seeder. Run `node scripts/seed-catalog.mjs` for a read-only plan or `node scripts/seed-catalog.mjs --apply --site-id b50d135b-16b5-440e-b168-47db49424421` for an explicit write while the site remains unpublished. Requires installed Wix CLI and `wix login`; stores no token. Remove/disable before production. |
@@ -187,7 +189,7 @@ No page/backend source file imports `wix-stores`, `wix-ecom`, Wix SDK packages, 
 
 | Feature | Direct Code | Wix API | Wix Studio | Current Status | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Navigation | Velo handlers/links in `masterPage.js` can be added | Investigate if needed | Inspect/edit actual menu items, links, responsive layout | Shared menu elements detected; no code | Destinations and behavior unknown. |
+| Navigation | `masterPage.js` sets `#horizontalMenu1.menuItems` with seven existing category slugs | Catalog V3 read confirmed IDs/slugs | Editor-saved desktop/mobile menus and breakpoints still need inspection | Runtime desktop menu coded; visual behavior unverified | More contains Stationery, Gift Items, Lunch Boxes; verify links in Preview. |
 | Categories | Seeder prepares native taxonomy | Catalog V3 category create/query and item assignment verified | Inspect category widget and navigation | 7 roots + 36 children verified in Wix | Category-page rendering still unknown. |
 | Products | Seeder prepares 14 demo records | Catalog V3 product creation/query verified | Inspect product/store setup | 14 visible demo products verified in Wix | Existing 13 unrelated products preserved. |
 | Product Images | Future media attachment script possible | Catalog V3 product media supports Wix Media IDs/URLs | Inspect gallery and store media | No new product imagery | Original/licensed assets required. |
@@ -225,10 +227,11 @@ No page/backend source file imports `wix-stores`, `wix-ecom`, Wix SDK packages, 
 3. **AnH Vibes product-definition milestone (2026-09-13):** Recorded original-brand requirements, taxonomy, theme model, homepage/product/gift/asset direction, and a phased implementation backlog. This was documentation only; no Wix data or application functionality was changed.
 4. **Connected Wix catalog MVP setup (2026-09-13):** Verified site ID, Catalog V3, CAD currency, and unpublished status; added an idempotent local Wix REST seeder; created and API-verified 43 AnH Vibes categories/subcategories and 14 demo products while preserving 13 existing products. Started `wix dev` and verified type/page sync. Interactive shopping flow remains unverified.
 5. **Catalog safety and idempotence recheck (2026-09-13):** Hardened preflight collision detection, passed lint/syntax checks, applied the seed to the connected site with zero writes, and independently verified all 43 category IDs and 14 product IDs/prices/leaf assignments. Restarted `wix dev`; browser flow remains a manual check.
+6. **Local storefront UI boundary and runtime MVP (2026-09-13):** Inspected page code, generated element types, Wix configuration, and official Velo/Studio guidance. Added conditional Home hero copy/CTA and shared brand-text/desktop-menu runtime code. Re-read the existing Catalog V3 roots and 14 demo products without seeding. Found empty direct memberships in main categories, added only the existing demos to their matching parents, and independently verified two demos per main category. Lint and Wix CLI sync passed; visual Preview and commerce flow still require a human browser check.
 
 ## Current Task
 
-Connected Wix catalog setup is complete for the MVP taxonomy and 14 demo products. The immediate task is interactive Wix Local Editor/Studio verification of category and product rendering and the native Product → Cart → Checkout flow, followed by the minimum missing media/navigation/configuration steps. Do not redesign the homepage yet.
+The AnH Vibes runtime UI changes are coded. The immediate task is to inspect Local Editor **Preview**, update saved Editor-canvas text and menus where needed, and verify category/product rendering and the native Product → Cart → Checkout flow. Do not redesign the homepage yet.
 
 ## Next Steps
 
@@ -276,6 +279,38 @@ The catalog/data portion of Phase 1 and the initial category/product population 
 - Whether customer testimonials exist and can be published with permission; newsletter consent and delivery workflow are also unknown.
 - `package-lock.json` is tracked in Git, although it was untracked at the initial analysis.
 - No interactive storefront/cart/checkout test has been performed. Catalog V3 API reads and a Wix Local Editor startup/type sync have been verified; this repository has no application test suite.
+- The Local Editor was launched after the UI code change, but its canvas/Preview could not be inspected through the CLI. The reported Poppy & Lily template is the last confirmed visual state from the site owner. Runtime AnH Vibes copy/menu and the site-specific category URL prefix remain browser checks.
+- The new main categories now each have two directly assigned existing demo products, in addition to each product's primary leaf subcategory. Whether the managed Category Page renders these records at the root-category URL is still unknown; inspect both root and leaf pages in Preview.
+
+## Local Storefront UI Control Boundary
+
+The template remains visible because catalog writes change Wix Stores records, while Wix Studio stores page text, images, menus, layout, and widget settings separately. `wix dev` syncs code and opens the Local Editor; it does not rewrite the Editor canvas. Velo `$w` changes run in Preview/visitor runtime and should be confirmed there. The generated element maps identify types/IDs, not their saved text, links, images, or widget bindings.
+
+| UI item | Control boundary and evidence | Current action/status |
+| --- | --- | --- |
+| Poppy & Lily brand text/logo | **DIRECT CODE** for any `$w.Text` containing the exact old brand; **WIX STUDIO / LOCAL EDITOR** for saved canvas copy, image/vector logo, styling. Shared types show `#text2`, `#text7`, and vector/image elements but do not map the visible logo to an ID. | `masterPage.js` conditionally changes matching text to AnH Vibes in Preview. Logo/image and saved canvas require inspection. |
+| Main navigation | **DIRECT CODE** for `#horizontalMenu1.menuItems` (typed `$w.Menu`); **WIX STUDIO / LOCAL EDITOR** for saved menu items, hamburger/mobile menu and breakpoint layout. Hamburger-related types are only `HiddenCollapsedElement`, not a writable `Menu`. | Runtime desktop menu is Home, four categories, and More with three categories. All seven links use the verified existing Wix category slugs. Responsive and link behavior unverified. |
+| Hero heading | **DIRECT CODE** for the existing `#text18`/`#text17` `$w.Text` pair; **WIX STUDIO / LOCAL EDITOR** for saved canvas typography/content. Exact ID of the old heading is unknown from types. | Home code updates the pair only if one contains “Handcrafted Wooden Toys” (whitespace tolerant). Preview unverified. |
+| Hero subtitle | **DIRECT CODE** for the other element in the same two-text hero pair when the old heading is found; **WIX STUDIO / LOCAL EDITOR** for saved canvas. | Target supporting copy coded conditionally; Preview unverified. |
+| Shop Now button | **DIRECT CODE** for `#button6.label` and `.link`; **WIX STUDIO / LOCAL EDITOR** for saved button setting/visual design. The button appears beside the hero text IDs in generated types. | Code sets “Shop Now” and `/category/anh-vibes-school-bags` only when old heading is found. Actual route click unverified. |
+| Hero image | **DIRECT CODE** can set an image `src` in general, but the current file/source and exact hero-image binding are absent; **WIX STUDIO / LOCAL EDITOR** controls the saved image. | Existing image deliberately retained; no asset added. |
+| Home product/category sections | **WIX STUDIO / LOCAL EDITOR** or **WIX-MANAGED STORE WIDGET**, depending on the actual repeater/gallery bindings. Types show `#repeater1`, `#repeater2`, `#gridGallery1`, but no content/data source. | No safe code change yet; inspect the sections and their connections in Editor. |
+| Category Page data source | **WIX-MANAGED STORE WIDGET** plus **WIX STUDIO / LOCAL EDITOR** settings. Source/types only expose `#categoryPage1` as an iframe. | Same site/catalog is configured, but rendering/category menu settings are unverified. |
+| Product Page data source | **WIX-MANAGED STORE WIDGET** if Wix's installed product component is bound; **WIX STUDIO / LOCAL EDITOR** for its settings. Types show only `#sliderGallery1` as an iframe, so the precise widget/binding is unknown. | No rebuild or Velo override; product page behavior unverified. |
+
+**Catalog connection check:** `wix.config.json` still points to site `b50d135b-16b5-440e-b168-47db49424421`. Site-scoped Wix REST reads returned `V3_CATALOG`, the same seven main-category IDs/slugs recorded above, 36 child categories, and 14 distinct AnH demo product IDs. Initially each root had zero direct items. Fourteen existing demo-to-parent memberships were added through the Category API; a separate `List Items In Category` read verified two exact demo IDs per root and no unrelated items. The seven runtime menu paths use the verified slugs and Wix's documented `/category/<slug>` convention. This verifies catalog targets, not that this site's URL prefix, menu clicks, Category Page widget, Product Page, or cart/checkout work in Preview. These were writes to the connected site's real Wix catalog, not a sandbox.
+
+**Validation:** `node --check` passed for both modified page files, `npm run lint` and `git diff --check` passed, and `npm run dev` (`wix dev`) synced types/pages and reported “Opening the Local Editor.” The CLI exposed no screenshot or browser interaction; visual status for AnH Vibes branding, navigation, hero, categories, products, Product Page, Add to Cart, Cart, and Checkout is **MANUAL CHECK REQUIRED**, not verified.
+
+**Minimum Local Editor manual steps** (make saved canvas match Preview; do not change Cart/Checkout components):
+
+1. In the Local Editor opened by `wix dev`, choose **Home**. In the header, select the visible **Poppy & Lily** text and click **Edit Text**; enter **AnH Vibes**. If it is an image/vector logo, leave the image for the later original-asset phase and report that it is image-based. This updates the Editor canvas; the runtime text replacement only affects text elements in Preview.
+2. On Home, select the **Handcrafted Wooden Toys** hero heading, click **Edit Text**, and enter **Little Things. Happy Vibes.** Select its supporting line and enter **Bags, toys, school essentials and gifts for every little adventure.** Select the hero button (`#button6`); use **Change Text** or **Settings** to enter **Shop Now**. Click its **Link** icon and choose **Page → Category Page → School Bags → Done**. Keep the current hero image.
+3. Select the header's desktop menu (`#horizontalMenu1`) and click **Manage Menu**. In the saved Editor menu, remove the old template links from the menu and add **Home** plus the seven named categories. For each category use **Add Item → Link → Page → Category Page → [exact category] → Done**; do not create a category. Put **Stationery**, **Gift Items**, and **Lunch Boxes** under **More** if the 1280px layout needs it. Check the tablet/mobile breakpoint's hamburger menu separately, because its elements are not exposed as a Velo `Menu`.
+4. Click **Preview**. Confirm the header, hero, and More menu; click **School Bags**, then a populated leaf such as **Preschool Bags**. If a route fails, use the Editor's category-link picker to confirm the site's actual Category Page URL and report it before changing code. On **Category Page**, click the category component twice, open **Settings → Menu**, and check that the new active categories are displayed if they are missing.
+5. Open **Galaxy Explorer Kids Backpack**. Confirm Product Page displays its name and CAD $49.00, then click **Add to Cart**, inspect the side cart/Cart Page, and enter Checkout. Stop before placing an order or making a payment. Report the first failing step and any Wix payment/shipping/tax setup prompt. If the product page is empty, inspect its product component in **Pages & Menu → Store Pages → Product Page** before altering code.
+
+Wix's [Velo Menu API](https://dev.wix.com/docs/velo/velo-only-apis/%24w/menu/menu-items) supports runtime menu items; [Wix Stores category-menu guidance](https://support.wix.com/en/article/wix-stores-displaying-product-subcategories) explains selecting exact Category Page items in the Editor. [Studio text](https://support.wix.com/en/article/studio-editor-adding-and-customizing-text), [button](https://support.wix.com/en/article/studio-editor-managing-and-customizing-basic-buttons-2023595), and [category display](https://support.wix.com/en/article/wix-stores-displaying-product-categories) guidance support the remaining manual steps.
 
 ## Session Handoff
 
@@ -322,12 +357,12 @@ The seeder was reviewed before execution. It uses the repository's configured si
 
 **Known limits:** Product images have not been added, storefront widgets and their bindings remain unverified, and the site still has unrelated older catalog records. The safety guard relies on Wix's published-URL response at run time and does not make live app data safe for experiments. The current script checks a complete single query page (up to 1,000 categories and 100 products) and refuses an incomplete result. A concurrent catalog edit between preflight and create could still cause an API conflict; no overwrite operation is used.
 
-- **Last completed task:** Rechecked seeder safety, hardened duplicate/collision detection, executed an idempotent apply with zero writes, and independently verified the connected Catalog V3 data.
-- **Current task:** Await site-owner review and interactive Wix Local Editor/Studio verification of the Category → Product → Cart → Checkout flow.
+- **Last completed task:** Investigated the storefront UI boundary, coded conditional AnH Vibes Home/shared runtime updates, added existing demos to their matching root categories, verified the catalog read-back, and started the Local Editor. No products/categories were seeded or deleted.
+- **Current task:** Await site-owner review and the exact Local Editor canvas/Preview checks in the UI control-boundary section, then verify Category → Product → Cart → Checkout.
 - **Current branch:** `main`, tracking `origin/main`.
-- **Git status:** `docs/CODEX_PROJECT_CONTEXT.md` and `scripts/seed-catalog.mjs` modified; no other tracked changes. No commit or push made by Codex in this task.
-- **Last commit:** `a085e41` — “Added”.
-- **Files changed in this task:** Modified `scripts/seed-catalog.mjs` safety preflight and this handoff document only. No page code, Cart/Checkout, Wix CMS, or existing catalog data was modified by this run.
-- **Validation performed:** `node --check scripts/seed-catalog.mjs`, `npm run lint`, `git diff --check`; dry run; V3/CAD/unpublished preflight; one apply run with zero creates/assignments; independent Wix API reads confirming 7 roots, 36 children, and all 14 demo products with names, CAD prices, visibility, IDs, and leaf assignments. `wix dev` synced types/pages and reported opening the Local Editor; browser commerce behavior was not exercised.
-- **Outstanding questions:** Interactive category/product/cart/checkout behavior; original media; navigation links; payment/shipping/tax setup; theme model; customer/member/order experience; all remaining site-only unknowns above.
-- **Recommended next action:** Review the recorded Wix IDs and run the exact manual Preview walk-through above; report each observed page/cart/checkout result before any homepage or media work.
+- **Git status:** `docs/CODEX_PROJECT_CONTEXT.md`, `src/pages/Home.c1dmp.js`, and `src/pages/masterPage.js` modified. No commit or push made by Codex.
+- **Last commit:** `77cc990` — “add”.
+- **Files changed in this task:** Modified Home page Velo, shared masterPage Velo, and this context document only. The Wix catalog gained 14 demo-to-parent category memberships; no Category/Product/Cart/Checkout page code, product/category records, CMS data, or assets were created/deleted.
+- **Validation performed:** `node --check` on both modified page files, `npm run lint`, `git diff --check`; Wix Catalog V3 query confirming seven exact root slugs/IDs, 36 children, and 14 distinct demo products; preflight and independent read-back confirming two existing demo IDs directly in each root; `wix dev` synced types/pages and opened the Local Editor. No browser visual or commerce-flow verification was possible through the CLI.
+- **Outstanding questions:** Actual saved Editor text/logo and hero element mapping; desktop/mobile menu layout and category URL routing; Category/Product widget bindings; interactive cart/checkout; original media; payment/shipping/tax setup; theme model; customer/member/order experience; all remaining site-only unknowns above.
+- **Recommended next action:** Perform the five manual Local Editor steps above, record visible results and any first failing navigation/commerce step, then adjust only the confirmed gap.
