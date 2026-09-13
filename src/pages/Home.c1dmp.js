@@ -4,13 +4,13 @@
 // Navigation shortcuts to existing Wix category IDs and category-page URLs.
 // Product records, prices, stock, and product media remain Wix-managed.
 const categoryShortcuts = [
-    { _id: '8fe8d0a5-f4fc-4b3b-b4a5-1da77dc2802a', label: 'School Bags', link: '/category/anh-vibes-school-bags' },
-    { _id: 'd37356e5-e3ae-4791-9769-430df403c659', label: 'Ladies Handbags', link: '/category/anh-vibes-ladies-handbags' },
-    { _id: '6513bc42-f7c0-4f0e-9474-b2733bec2a79', label: 'Soft Toys', link: '/category/anh-vibes-soft-toys' },
-    { _id: 'd07cde96-3f30-44f1-adff-d1701422688d', label: 'Bottles', link: '/category/anh-vibes-bottles' },
-    { _id: 'c91b348a-76b7-45e9-a7e7-19d7eecc6fc4', label: 'Stationery', link: '/category/anh-vibes-stationery' },
-    { _id: 'a4f0d639-549f-474c-af07-f3e5698e401e', label: 'Gift Items', link: '/category/anh-vibes-gift-items' },
-    { _id: '9a98a02e-664f-4d2f-b316-1d6554bfce45', label: 'Lunch Boxes', link: '/category/anh-vibes-lunch-boxes' },
+    { _id: '8fe8d0a5-f4fc-4b3b-b4a5-1da77dc2802a', label: 'School Bags', link: '/category/anh-vibes-school-bags', image: 'https://static.wixstatic.com/media/339216_f561241ef8c84baa9e175aaaee7c1f29~mv2.png', alt: 'Colorful AnH Vibes school bags' },
+    { _id: 'd37356e5-e3ae-4791-9769-430df403c659', label: 'Ladies Handbags', link: '/category/anh-vibes-ladies-handbags', image: 'https://static.wixstatic.com/media/339216_cd05ec321106425994439a78156c80c0~mv2.png', alt: 'AnH Vibes ladies handbags' },
+    { _id: '6513bc42-f7c0-4f0e-9474-b2733bec2a79', label: 'Soft Toys', link: '/category/anh-vibes-soft-toys', image: 'https://static.wixstatic.com/media/339216_28e328c80cf246228773aac2974aace1~mv2.png', alt: 'AnH Vibes soft toys' },
+    { _id: 'd07cde96-3f30-44f1-adff-d1701422688d', label: 'Bottles', link: '/category/anh-vibes-bottles', image: 'https://static.wixstatic.com/media/339216_d28bdf6319874d299b39da2c4f51df6d~mv2.png', alt: 'AnH Vibes bottles' },
+    { _id: 'c91b348a-76b7-45e9-a7e7-19d7eecc6fc4', label: 'Stationery', link: '/category/anh-vibes-stationery', image: 'https://static.wixstatic.com/media/339216_fbb962b3f74d4522a8a4979aca0f2b65~mv2.png', alt: 'AnH Vibes stationery' },
+    { _id: 'a4f0d639-549f-474c-af07-f3e5698e401e', label: 'Gift Items', link: '/category/anh-vibes-gift-items', image: 'https://static.wixstatic.com/media/339216_5ff8f7a4c7ff4b76a745fc7ca574aa53~mv2.png', alt: 'AnH Vibes gift items' },
+    { _id: '9a98a02e-664f-4d2f-b316-1d6554bfce45', label: 'Lunch Boxes', link: '/category/anh-vibes-lunch-boxes', image: 'https://static.wixstatic.com/media/339216_6ea3fe30ef0344d08403cd407e66b50f~mv2.png', alt: 'AnH Vibes lunch boxes' },
 ];
 
 $w.onReady(function () {
@@ -45,16 +45,19 @@ $w.onReady(function () {
         }
     });
     if (foundOldCategoryLabels.size === 3) {
+        $w('#text19').text = 'SHOP BY CATEGORY';
         categoryRepeater.onItemReady(($item, itemData) => {
             const label = $item('#text20');
             const image = $item('#imageX7');
             label.html = `<a href="${itemData.link}">${itemData.label}</a>`;
+            image.src = itemData.image;
             image.link = itemData.link;
-            image.alt = itemData.label;
-            image.collapse(); // Hide the wooden-toy template image.
+            image.alt = itemData.alt;
+            image.expand();
+            image.show();
         });
         categoryRepeater.data = categoryShortcuts;
-        console.info('[AnH Vibes] Replaced three template category items with seven Wix category links.');
+        console.info('[AnH Vibes] Replaced three template category items with seven linked Wix Media image cards.');
     } else {
         console.info('[AnH Vibes] Category repeater left unchanged; template labels were not all found.');
     }
