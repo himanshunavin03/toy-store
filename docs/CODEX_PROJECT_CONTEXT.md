@@ -39,6 +39,58 @@ Wix-managed widget behavior may run independently of these empty callbacks. Its 
 - No custom SDK/API integration, CMS collection declaration, dataset ID, catalog record, product ID, or order-handling code is checked in.
 - The presence of widget elements is evidence of a Wix-managed UI surface, not evidence that checkout or any other commerce operation currently works.
 
+## AnH Vibes Product Vision & Requirements
+
+**Target, not current state:** Rebrand and develop this Wix Studio store as **AnH Vibes**, a modern, responsive shop for kids' gear, toys, school essentials, gifts, and ladies handbags. The desired implementation uses Wix Stores/eCommerce with Velo and applicable Wix APIs while preserving working Wix-managed commerce. None of the taxonomy, branding, assets, or new features below is confirmed to exist in the connected Wix site yet.
+
+### Reference and originality boundary
+
+[Harsh Stores](https://harshstores.com/) is a functional, information-architecture, merchandising, and user-experience reference only. Its observed homepage uses category entry points, product and campaign sections, theme merchandising, testimonials, and newsletter/footer areas; a [collection page](https://harshstores.com/collections/bags-for-kids) exposes availability/price filters and sorting; a [product page](https://harshstores.com/products/unicorn-backpackmagical-unicorn-kids-backpack-holographic-ra) shows product detail and gifting information. These observations do not establish what the Wix site supports. Do not copy its images, logo, text, product content, brand styling, promotional assets, or page layouts pixel-for-pixel. AnH Vibes needs original branding, logo, palette, typography, photography/illustrations, banners, animations, product copy, and UI styling. Use properly licensed or original product imagery; use licensed character/franchise material only with the rights to do so.
+
+### Catalog information architecture
+
+The desired browse model is **main category -> subcategory**, plus an independent, cross-category **Shop By Theme** dimension. A product should be discoverable from its relevant subcategory and from one or more themes without duplicate product records; for example, a Unicorn School Bag could appear under `School Bags > Girls Bags` and `Shop By Theme > Unicorn`. The taxonomy must remain editable and extensible. Decide the actual Wix catalog/CMS representation only after checking the installed catalog model, current records, widget support, and relevant APIs; do not assume nested store categories or multi-assignment work a particular way.
+
+| Main category | Initial subcategories |
+| --- | --- |
+| School Bags | Preschool Bags; Boys Bags; Girls Bags; Character Bags; Trolley Bags; Backpack Sets |
+| Ladies Handbags | Handbags; Sling Bags; Tote Bags; Wallets; Clutches |
+| Soft Toys | Teddy Bears; Animal Plush; Character Plush; Large Soft Toys; Mini Soft Toys |
+| Bottles | Kids Bottles; Insulated Bottles; Steel Bottles; Sippers; Character Bottles |
+| Stationery | Pencil Cases; Pens & Pencils; Art Sets; School Sets; Diaries & Notebooks |
+| Gift Items | Birthday Gifts; Return Gifts; Gifts for Girls; Gifts for Boys; Gift Sets |
+| Lunch Boxes | Bento Lunch Boxes; Steel Lunch Boxes; Compartment Lunch Boxes; Character Lunch Boxes; Lunch Sets |
+
+Initial themes: **Unicorn, Princess, Space, Dino, Superhero, Kawaii / Cute, Sports**. Theme names describe merchandising concepts; visual treatments and product content must be original or properly licensed.
+
+### Homepage and shared storefront requirements
+
+Plan a cohesive homepage with approximately these elements, grouping or simplifying them responsively rather than forcing all sections above the fold:
+
+1. Announcement/promotional bar; AnH Vibes header and original logo.
+2. Search, account, wishlist, cart, and responsive main navigation/mega menu.
+3. Animated hero/banner with a clear shopping action.
+4. Shop By Category and New Arrivals.
+5. Shop By Theme and a Back To School campaign section.
+6. Trending Products, Best Sellers, and a Gift section.
+7. A selected promotional animated/GIF-style banner and Special Offers.
+8. Authentic customer reviews/testimonials, newsletter/social section, and a full e-commerce footer.
+
+Merchandising labels such as New Arrivals, Best Sellers, Trending, and Special Offers need explicit, maintainable selection rules and available product data. Do not publish fabricated testimonials or unsupported offers.
+
+### Product, discovery, and gifting requirements
+
+- Product detail: multi-image gallery; current and original/sale price where applicable; variants/options; stock/availability; description; specifications/features; category/subcategory and theme context; add to cart; buy now where appropriate; wishlist; related and recommended products.
+- Discovery: search, category/subcategory and theme browsing, filtering, sorting, New Arrivals, Best Sellers, Trending, and Special Offers.
+- Gift experience: gift wrapping, optional gift message, gift recommendations, and birthday/return-gift collections. Define how gift choices and message reach the order and fulfillment workflow before implementing them.
+- Preserve Wix-managed cart, checkout, member, and order behavior when it meets the requirement. Validate any proposed customization against actual widget/API capabilities first.
+
+### Design and asset principles
+
+The store should feel modern, premium, colorful, playful, family friendly, and clean. Its visual language must work for both children's products and ladies handbags. Design desktop and mobile together, with legible type, accessible contrast and controls, clear product information, and fast image/media loading. Use animation strategically in the main hero, campaigns, and selected category/theme moments; provide a reduced-motion-friendly experience and avoid performance-heavy motion throughout the page.
+
+Create or properly license an original AnH Vibes logo, hero banners, category graphics, theme graphics, promotional graphics, selected GIF/animated/video-style assets, product imagery where appropriate, and any needed icons. Asset generation/sourcing and Wix media integration are separate future tasks. No Harsh Stores asset is approved for reuse.
+
 ## Pages
 
 Each page listed below has only the empty starter callback. Responsibilities are indicated by page names and, where noted, generated element types; actual live settings need inspection.
@@ -134,24 +186,43 @@ No source file imports `wix-stores`, `wix-ecom`, Wix SDK packages, `wix-members`
 4. **Commerce preservation:** Do not replace working Wix-managed commerce functionality without a specific, justified reason.
 5. **Evidence discipline:** Treat page names and generated element IDs as design clues. Confirm live behavior, data, and bindings before making architecture claims or changes.
 6. **Handoff upkeep:** Read this file before future repository changes and update it after meaningful work. Do not rename existing Wix page-code files casually; their names map to pages.
+7. **Target identity:** AnH Vibes is the intended brand; “Kids Gear Shop” remains this document's original project heading until a deliberate repository/document rename. The reference store informs structure and usability, never asset or copy reuse.
+8. **Taxonomy decision pending:** Main categories, subcategories, and themes are product requirements. Their Wix Stores/CMS representation remains an architecture decision to make after inspecting actual site data and supported APIs.
 
 ## Work Completed
 
 1. **Repository application-understanding analysis (2026-09-13):** Inspected tracked structure, all page code, backend/public folders, package and Wix configuration, local generated element maps, npm dependency state, Git branch/status/history, and the discoverable Category-to-Orders path. Identified that custom Velo logic is empty and that Wix-managed commerce behavior requires editor/runtime verification.
 2. **Persistent context document (2026-09-13):** Created this handoff file only; no application code or store functionality was changed.
+3. **AnH Vibes product-definition milestone (2026-09-13):** Recorded original-brand requirements, taxonomy, theme model, homepage/product/gift/asset direction, and a phased implementation backlog. This was documentation only; no Wix data or application functionality was changed.
 
 ## Current Task
 
-Application understanding and development-environment setup. Repository analysis and this context document are complete. Wix Studio/site configuration inspection and runtime flow verification have not yet been performed; no store implementation has begun.
+AnH Vibes product definition and architecture/data discovery. The vision and backlog are documented. Wix Studio/site configuration inspection and runtime flow verification have not yet been performed; no store implementation has begun.
 
 ## Next Steps
 
-1. Open the connected site in Wix Studio and inspect each store/member widget, its page URL, links, settings, and responsive navigation. Record observed behavior here.
-2. Inspect the Wix store dashboard and CMS: installed apps, catalog, categories/collections, product data, media, variants, inventory, CMS collections, permissions, and any editor data bindings.
-3. Use `wix dev` or a Wix preview to walk Category -> Product -> Cart -> Checkout -> Thank You and member order history. Record what works, what fails, and what is already Wix-managed. Avoid a real paid transaction unless specifically authorized.
-4. Define the target feature scope and prioritize verified gaps. Decide per feature whether existing Wix configuration, Velo code, or an applicable Wix API is the right control surface.
-5. Before adding backend methods, specify the callers and tighten `permissions.json` for sensitive operations.
-6. Implement the highest-priority verified gap in a small reviewable change; validate it in Wix preview and update this document with the resulting architecture and status.
+Ordered implementation backlog and proposed phases below. **CODE**, **WIX API**, **WIX STUDIO**, and **ASSET GENERATION** identify likely work surfaces to evaluate, not confirmed Wix API access or authorization. Wix dashboard/store administration is included under **WIX STUDIO** for planning purposes. Each phase should finish with evidence recorded in this document before dependent work proceeds.
+
+| Phase | Control surfaces | Planned outcome and dependency |
+| --- | --- | --- |
+| 1. Architecture/data planning | CODE + WIX API + WIX STUDIO | Inspect site/widgets, catalog/CMS, permissions, URLs, current transactions, and `wix dev` preview. Validate available APIs. Decide the source of truth for categories, subcategories, themes, merchandising flags, specifications, gift metadata, and the product-to-theme relationship. Document model and IDs before migration/population. |
+| 2. Branding/design system | WIX STUDIO + ASSET GENERATION + CODE | Create original logo, palette, typography, spacing, components, tone of voice, and accessible responsive patterns; record design tokens and how they are applied in Studio versus Velo. |
+| 3. Navigation | CODE + WIX API + WIX STUDIO | Configure the header, category/subcategory and theme destinations, search/account/wishlist/cart access, responsive menu, and footer links. Use code/API only where site menu behavior supports it; verify routes and mobile usability. |
+| 4. Categories/subcategories | WIX API + WIX STUDIO + CODE | Establish the seven main categories and initial subcategories in the chosen catalog model; validate hierarchy or equivalent navigation, stable slugs/URLs, and extensibility. No catalog mutation before phase 1's data-model decision. |
+| 5. Images/assets | ASSET GENERATION + WIX STUDIO + WIX API | Produce or license brand, category, theme, hero, campaign, icon, animation, and product assets; document ownership, alt text, crop ratios, file budgets, and Wix media integration. Do not reuse reference-site assets. |
+| 6. Product/catalog population | WIX API + WIX STUDIO + CODE | Prepare a validated product import/edit workflow for original titles/copy, category/theme assignments, image sets, prices, variants, stock, specifications, and merchandising fields. Populate only after permissions, content, and data model are approved. |
+| 7. Homepage | CODE + WIX API + WIX STUDIO + ASSET GENERATION | Build the planned header, hero, category/theme entry points, product campaigns, gift and offers sections, authentic reviews, newsletter/social area, and footer. Use maintainable selection rules and performance-conscious motion. |
+| 8. Product experience | CODE + WIX API + WIX STUDIO | Validate Wix's existing product page first; fill verified gaps in gallery, options, pricing, availability, description/specifications, related/recommended products, wishlist, and add-to-cart/buy-now behavior. |
+| 9. Search/filter | CODE + WIX API + WIX STUDIO | Establish product search, category/theme/availability/price filters as supported, sorting, empty states, and mobile filter UX. Prefer existing capable Wix widgets where they meet the requirements. |
+| 10. Cart/checkout | CODE + WIX API + WIX STUDIO | Verify existing cart, side cart, checkout, shipping, tax, payment, and order handoff; customize only confirmed gaps without duplicating Wix-managed transaction logic. |
+| 11. Members/wishlist | CODE + WIX API + WIX STUDIO | Verify sign-in, account, wishlist, order-history access, privacy, and guest/member behavior; add only needed integrations. |
+| 12. Gift functionality | CODE + WIX API + WIX STUDIO + ASSET GENERATION | Design gift-wrap choice, gift message persistence to the order/fulfillment view, gift recommendations, birthday/return-gift merchandising, and original gift graphics. |
+| 13. Responsive/mobile | CODE + WIX STUDIO + ASSET GENERATION | Audit every page and widget at common widths; refine menu, cards, gallery, filters, forms, checkout, image crops, touch targets, and reduced-motion/performance behavior. |
+| 14. SEO | CODE + WIX API + WIX STUDIO | Define original titles/descriptions, category/product URL strategy, structured data where supported, image alt text, indexability, redirects, and sitemap behavior; check Wix's existing SEO controls before adding code. |
+| 15. Testing | CODE + WIX STUDIO | Test taxonomy navigation, search/filter/sort, product options, inventory states, cart, checkout preview, member/wishlist, order display, gift metadata, accessibility, performance, and desktop/mobile behavior. Use sandbox/test payment settings where available; do not make an unapproved paid purchase. |
+| 16. Production readiness | CODE + WIX API + WIX STUDIO | Review permissions and secrets, catalog/content accuracy, store policies, payment/shipping/tax setup, analytics, legal copy, backup/rollback steps, publish workflow, and monitoring. Obtain a final site-owner review before release. |
+
+Phase 1 is the immediate next action. The exact split of CODE, WIX API, and WIX STUDIO can change after site/API inspection; update the matrix and this backlog when it does.
 
 ## Known Issues / Unknowns
 
@@ -167,17 +238,22 @@ Application understanding and development-environment setup. Repository analysis
 - Copy/content of policy and accessibility pages, as well as Wix Forms V2 configuration and submission destination.
 - Availability and authorization of specific Wix APIs for future changes; generic type declarations do not answer this.
 - Whether the local ignored `.wix/types/` metadata exactly matches the latest published site design.
-- Whether `package-lock.json` should become tracked; it was already untracked at analysis time.
+- Which Wix catalog representation can maintain main categories, subcategories, and cross-category themes without duplicate products; whether a CMS mapping is needed.
+- Merchandising rules and data sources for New Arrivals, Trending, Best Sellers, and Special Offers; gift-option persistence through checkout and fulfillment.
+- AnH Vibes launch market, currency, languages, shipping regions, tax and return policies, and payment providers. Do not inherit the reference site's geography or commercial terms.
+- Whether any existing products or media can be used with documented ownership/licensing, and which original assets must be created.
+- Whether customer testimonials exist and can be published with permission; newsletter consent and delivery workflow are also unknown.
+- `package-lock.json` is now tracked in Git, although it was untracked at the initial analysis; the commit that added it has not been audited for purpose.
 - No runtime test or live-site audit has been performed, and this repository has no application tests.
 
 ## Session Handoff
 
-- **Last completed task:** Read-only repository analysis, followed by creation of this project-context document.
-- **Current task:** Application understanding and development-environment setup; next phase is Wix Studio/site inspection and preview verification.
+- **Last completed task:** Documented the AnH Vibes product vision and phased implementation backlog in this context file.
+- **Current task:** Product definition and architecture/data discovery; the immediate next phase is Wix Studio/site inspection and preview verification.
 - **Current branch:** `main`, tracking `origin/main`.
-- **Git status:** The pre-existing `package-lock.json` is untracked; this new `docs/CODEX_PROJECT_CONTEXT.md` is also untracked until committed. No tracked application files were modified.
-- **Last commit:** `d38237f` — “Initial commit” (2026-09-13 16:00:50 UTC).
-- **Files changed in this task:** Created `docs/CODEX_PROJECT_CONTEXT.md` only.
-- **Validation performed:** Inspected every application page-code file and confirmed all 17 are identical starter stubs; reviewed configuration, dependency declarations/local lockfile, generated element maps, and Git history/status. Reviewed the created document and final Git status. No Wix runtime tests were run.
-- **Outstanding questions:** All site-only, catalog/CMS, widget-configuration, API-access, and transaction-flow unknowns listed above.
-- **Recommended next action:** Inspect the connected Wix Studio site and store/CMS dashboard, then preview the shopping flow and update this document with verified findings before implementing store changes.
+- **Git status:** `docs/CODEX_PROJECT_CONTEXT.md` modified; no other working-tree changes at the end of this documentation task. No commit or push made by Codex.
+- **Last commit:** `fe9479e` — “add” (2026-09-13 11:40:59 -0600). The branch has two commits after the initial repository analysis; both the context file and `package-lock.json` are tracked as of this task.
+- **Files changed in this task:** Updated `docs/CODEX_PROJECT_CONTEXT.md` only.
+- **Validation performed:** Re-read the context document; inspected the supplied requirements and the public reference homepage, collection, and product page for structural patterns; checked current Git history/status and the documentation diff. No Wix runtime, API, or store-data test was run.
+- **Outstanding questions:** All site-only, catalog/CMS, widget-configuration, API-access, transaction-flow, taxonomy-model, market, and original-asset unknowns listed above.
+- **Recommended next action:** Complete Phase 1 architecture/data planning: inspect the connected Wix Studio site and store/CMS dashboard, preview the existing shopping flow, verify available APIs, and record the chosen taxonomy/theme model before implementing store changes.
