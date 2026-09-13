@@ -15,13 +15,13 @@ This is the persistent project memory and handoff document. Future Codex session
 
 This is a Wix Git Integration & Wix CLI repository for Velo site code, not a standalone React storefront. The checked-in application surface is page-level JavaScript under `src/pages`, shared page code in `masterPage.js`, optional backend/public code folders, Wix CLI configuration, and a development-only catalog seed script under `scripts/`. The visual page structure, embedded app widgets, widget configuration, and store data are not represented as editable application source here.
 
-As of the UI MVP change, Home page code and `masterPage.js` set selected text, the hero button, and the desktop menu at runtime. The other 15 page-code files remain empty starter callbacks. There are no application imports, backend/public calls, data queries, or custom commerce calls. Wix-generated, ignored `.wix/types/` declarations list editor elements and provide limited evidence of the site design. They are generated local metadata, not proof of configured or working live behavior.
+The former UI MVP used Home and `masterPage.js` runtime text/button/menu overrides. After the 2026-09-13 correction below, those overrides have been removed so the saved Studio canvas/native menu is authoritative. The other 15 page-code files remain empty starter callbacks. There are no application imports, backend/public calls, data queries, or custom commerce calls. Wix-generated, ignored `.wix/types/` declarations list editor elements and provide limited evidence of the site design. They are generated local metadata, not proof of configured or working live behavior.
 
 Observed source path:
 
 ```text
 Wix page or embedded widget
-  -> Home.c1dmp.js / masterPage.js set selected $w text, button, and menu at runtime
+  -> Home.c1dmp.js / masterPage.js contain no runtime storefront override
   -> other page callbacks remain empty
   -> no custom public/backend module
   -> no Wix Stores, eCommerce, Members, or CMS API call in visitor code
@@ -31,7 +31,7 @@ Wix-managed widget behavior may run independently of the page callbacks. Its dat
 
 ## Current Application State
 
-- Sixteen named page-code files and one `masterPage.js` exist. Home and shared code now have a minimal runtime copy/navigation update; the other 15 page-code files remain starter stubs.
+- Sixteen named page-code files and one `masterPage.js` exist. Home and shared code have no runtime copy/navigation update after the correction below; the other 15 page-code files remain starter stubs.
 - Generated element declarations identify a category-page iframe, cart and checkout iframes, side-cart and success-popup iframes/controllers, a thank-you iframe, wishlist and order-history iframes, and shared cart/member/navigation elements.
 - Home has generated declarations for two repeaters, a gallery iframe, images, text, and a button. Their content, links, and editor bindings are unknown.
 - The Product Page declaration identifies a slider-gallery iframe but does not establish product data binding, options, pricing, or add-to-cart behavior.
@@ -189,7 +189,7 @@ No page/backend source file imports `wix-stores`, `wix-ecom`, Wix SDK packages, 
 
 | Feature | Direct Code | Wix API | Wix Studio | Current Status | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Navigation | `masterPage.js` sets `#horizontalMenu1.menuItems` with seven main and 36 child category slugs | Prior Catalog V3 read confirmed IDs/slugs | Editor-saved desktop/mobile menus and breakpoints still need inspection | Full runtime menu coded; visual behavior unverified | At 1280px all eight top-level links must fit; verify dropdowns and URLs in Preview. |
+| Navigation | No runtime menu override after visual correction | Prior Catalog V3 read confirmed IDs/slugs | Configure saved native dropdown and hamburger menus | Broken Local Editor submenu reported by owner; Studio change pending | At 1280px all eight top-level links must fit; verify dropdowns and actual URLs in Preview. |
 | Categories | Seeder prepares native taxonomy | Catalog V3 category create/query and item assignment verified | Inspect category widget and navigation | 7 roots + 36 children verified in Wix | Category-page rendering still unknown. |
 | Products | Seeder prepares 14 demo records | Catalog V3 product creation/query verified | Inspect product/store setup | 14 visible demo products verified in Wix | Existing 13 unrelated products preserved. |
 | Product Images | Future media attachment script possible | Catalog V3 product media supports Wix Media IDs/URLs | Inspect gallery and store media | No new product imagery | Original/licensed assets required. |
@@ -284,6 +284,8 @@ The catalog/data portion of Phase 1 and the initial category/product population 
 
 ## Local Storefront UI Control Boundary
 
+**Historical note:** the runtime code/status in this section describes the `ad88861` handoff and is superseded by “Visual correction and editor execution handoff” below. The generated element-ID evidence remains useful. The actual canvas was not changed by the correction.
+
 The template remains visible because catalog writes change Wix Stores records, while Wix Studio stores page text, images, menus, layout, and widget settings separately. `wix dev` syncs code and opens the Local Editor; it does not rewrite the Editor canvas. Velo `$w` changes run in Preview/visitor runtime and should be confirmed there. The generated element maps identify types/IDs, not their saved text, links, images, or widget bindings.
 
 | UI item | Control boundary and evidence | Current action/status |
@@ -308,6 +310,8 @@ Wix's [Velo Menu API](https://dev.wix.com/docs/velo/velo-only-apis/%24w/menu/men
 
 ## AnH Vibes Storefront Design Handoff (2026-09-13)
 
+**Historical note:** this describes the first handoff at `ad88861`. Its claim that the Velo menu and hero copy are still active is superseded by the correction below.
+
 **Architecture decision:** Wix Stores Catalog V3 remains the only product/category/price/inventory system of record. Product sections must be Wix Stores Product Galleries or other native category-backed components. The Product Page, Category Page, Side Cart, Cart, Checkout, Thank You, Members, Wishlist and Orders remain Wix-managed. No second catalog, CMS product mirror, hard-coded product cards, storefront-only prices, seeding, or catalog write was added in this design task. A manually curated gallery may still read Wix product details but will not automatically include newly added products; prefer a category-based native source for growth. Theme product discovery stays inactive until existing products are intentionally assigned to native Wix theme categories and widget behavior is checked.
 
 **Code completed:** `masterPage.js` now supplies Home, all seven existing main category slugs, and all 36 child slugs to the typed `#horizontalMenu1` menu, with no generic More group. Its menu labels/slug routes are a snapshot of Wix category identities, not a dynamic Wix category query: renaming a category or changing its slug requires updating the menu code or shifting menu authority to Studio. Product category assignments, prices, inventory, images and product details are not stored in this menu. `Home.c1dmp.js` changes the recognized old template hero copy and sets the interim CTA to **Shop School Bags** with the existing Wix root-category path, even after saved hero copy changes. A true New Arrivals CTA requires a real destination.
@@ -319,6 +323,16 @@ Wix's [Velo Menu API](https://dev.wix.com/docs/velo/velo-only-apis/%24w/menu/men
 **Validation:** `npm run lint`, `node --check` for both modified Velo files, `git diff --check`, and `npx wix sync-types` passed. `npm run dev` synced UI version 4 types/pages and reported “Opening the Local Editor.” These checks validate code/tool startup only. No browser Preview, breakpoint visual, link, widget binding, product-card, Add to Cart, Checkout, member, wishlist, or order action was verified. No commit or push was made.
 
 **Next action:** In the Local Editor, follow [WIX_STUDIO_IMPLEMENTATION.md](WIX_STUDIO_IMPLEMENTATION.md): apply the actual 17-section canvas and native Wix gallery/category bindings; upload approved assets; test at desktop/tablet/mobile; then walk Home → Category → Product → Add to Cart → Cart → Checkout. Record each actual result and stop before a real paid order. Inspect the 13 unrelated pre-existing products and current policy/payment/shipping settings before launch.
+
+## Visual correction and editor execution handoff (2026-09-13)
+
+The owner inspected the Local Editor after `ad88861` and reported that the saved canvas still shows wooden-toy hero, category, product, promotion, and footer visuals; a large unstyled School Bags submenu overlaps the hero. This visual report is the current observed site state. Repository type declarations cannot show image content or prove a section's exact identity. They show seven Home section IDs (`#section7`, `#section1`, `#section8`, `#section9`, `#section10`, `#section11`, `#section13`), a hero text/button/image cluster, two repeaters, and an iframe gallery. The execution checklist requires confirming these in Layers before deleting any canvas section.
+
+**Decision:** Wix Studio's saved native menu now owns all top-level and child links and the responsive dropdown/hamburger presentation. `masterPage.js` no longer injects `#horizontalMenu1.menuItems`; `Home.c1dmp.js` no longer changes hero text/button at runtime. This removes the code that could reintroduce the broken list or override an Editor-configured hero CTA. The Local Editor must now create/configure the complete menu, choose actual Wix Category Page links, and save. No code-level product catalog, pricing, media, cart, or checkout replacement was made.
+
+**Deliverables:** [WIX_STUDIO_IMPLEMENTATION.md](WIX_STUDIO_IMPLEMENTATION.md) is now a top-to-bottom 17-section execution checklist with action, new content, Wix data source, asset IDs, responsive settings, animation, and validation. [ANH_VIBES_ASSET_PLAN.md](ANH_VIBES_ASSET_PLAN.md) now uses requested A001–A040 IDs, includes separate desktop/mobile Back-to-School briefs, and retains 14 existing-product photo briefs P001–P014. The prior local hero image remains an unapproved concept. Neither generated asset specifications nor repository code change the Wix canvas or attach Wix Media.
+
+**Control boundary:** Codex can edit Velo and docs, prepare/generate/review local assets, and verify repository checks. The owner must apply the documented Studio canvas operations, upload/select approved media, configure native galleries and menu, attach accurate product photos to the existing Wix records, save the UI version, and run browser Preview/commerce checks. No seed/catalog write, commit, push, image upload, UI-version save, or browser verification occurred in this correction.
 
 ## Session Handoff
 
@@ -365,12 +379,12 @@ The seeder was reviewed before execution. It uses the repository's configured si
 
 **Known limits:** Product images have not been added, storefront widgets and their bindings remain unverified, and the site still has unrelated older catalog records. The safety guard relies on Wix's published-URL response at run time and does not make live app data safe for experiments. The current script checks a complete single query page (up to 1,000 categories and 100 products) and refuses an incomplete result. A concurrent catalog edit between preflight and create could still cause an API conflict; no overwrite operation is used.
 
-- **Last completed task:** Prepared the first AnH Vibes storefront design handoff, full category/subcategory runtime menu, original hero concept, 38-asset plan, and exact Wix Studio implementation/acceptance guide. No catalog write or seed was made in this task.
-- **Current task:** Site-owner review, then Wix Studio canvas implementation, native catalog widget binding, original media approval/upload, and interactive commerce verification.
+- **Last completed task:** Corrected the first visual handoff: removed runtime hero/menu overrides, rewrote the exact 17-section Local Editor execution checklist, and reconciled final asset briefs to requested IDs. No Wix canvas or catalog change was made.
+- **Current task:** Site-owner review of the execution checklist; then manual Wix Studio canvas implementation, native catalog widget binding, original media approval/upload, UI-version save, and interactive commerce verification.
 - **Current branch:** `main`, tracking `origin/main`.
-- **Git status:** `src/pages/Home.c1dmp.js`, `src/pages/masterPage.js`, and this context document modified; `docs/WIX_STUDIO_IMPLEMENTATION.md`, `docs/ANH_VIBES_ASSET_PLAN.md`, and `assets/anh-vibes/hero-desktop-concept.png` untracked. No commit or push made.
-- **Last commit:** `7b1f528` — “add”.
-- **Files changed in this task:** Modified the two Velo files and this context; created the two handoff documents and one original local hero concept. No Wix catalog data, CMS record, widget page code, or checkout code changed.
-- **Validation performed:** `node --check` on both modified page files, `npm run lint`, `git diff --check`, `npx wix sync-types`, and `npm run dev` UI version 4 type/page sync and Local Editor startup. No new catalog API read or browser commerce test was performed in this task.
+- **Git status:** Check `git status` at review; this correction changes only the two Velo files and three docs. No commit or push made.
+- **Last commit:** `ad88861` — “Added”.
+- **Files changed in this task:** `src/pages/Home.c1dmp.js`, `src/pages/masterPage.js`, `docs/CODEX_PROJECT_CONTEXT.md`, `docs/WIX_STUDIO_IMPLEMENTATION.md`, and `docs/ANH_VIBES_ASSET_PLAN.md`. The existing local hero concept was not changed or uploaded.
+- **Validation performed:** Repository syntax/lint/diff checks; no catalog API read, Studio canvas save, or browser commerce test was performed in this task.
 - **Outstanding questions:** Saved Studio canvas content and actual category/Product Gallery bindings; desktop width and mobile hamburger behavior; site-specific category URLs; original media approval; themes; authentic reviews/blog; operational policies; payment/shipping/tax setup; member/wishlist/order experience.
-- **Recommended next action:** Apply and verify the exact editor checklist in `docs/WIX_STUDIO_IMPLEMENTATION.md`, starting with native category/product bindings and the Home → Product → Cart → Checkout Preview path.
+- **Recommended next action:** Review and apply `docs/WIX_STUDIO_IMPLEMENTATION.md` in the Local Editor, beginning with the Layers audit and template removal, then native menu and product bindings. Save the UI version and verify Home → Product → Cart → Checkout in Preview.
