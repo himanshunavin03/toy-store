@@ -11,14 +11,24 @@ const categoryMenu = (label, slug, subcategories) => ({
     })),
 });
 
+const addPrototypeClass = (element, className) => {
+    if (element.customClassList) {
+        element.customClassList.add(className);
+    }
+};
+
 $w.onReady(function () {
     // These are the verified Wix Catalog V3 category slugs, not a product catalog.
     // The Editor controls menu layout and the mobile hamburger at each breakpoint.
     for (const element of $w('Text')) {
         if (element.text.includes('Poppy & Lily')) {
             element.text = element.text.replace(/Poppy & Lily/g, 'AnH Vibes');
+            addPrototypeClass(element, 'anh-brand-wordmark');
         }
     }
+
+    addPrototypeClass($w('#header1'), 'anh-site-header');
+    addPrototypeClass($w('#horizontalMenu1'), 'anh-main-navigation');
 
     // Preserve child-category destinations for a future styled Studio dropdown.
     const categoryNavigation = [

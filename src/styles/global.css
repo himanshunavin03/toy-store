@@ -1,0 +1,107 @@
+/* RUN/PLAY prototype styles. Applied only by customClassList in Home and
+   masterPage; the permanent Wix Studio canvas remains unchanged. */
+.anh-site-header {
+  background: #fff9f3;
+  box-shadow: 0 4px 18px rgb(39 48 74 / 8%);
+}
+
+.anh-brand-wordmark {
+  color: #27304a;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.anh-main-navigation {
+  color: #27304a;
+  font-size: 14px;
+}
+
+.anh-hero-card {
+  background: linear-gradient(135deg, #fff9f3 0%, #fdece8 55%, #eff7f8 100%);
+  border-radius: 24px;
+  box-shadow: 0 18px 45px rgb(39 48 74 / 8%);
+  overflow: hidden;
+}
+
+.anh-hero-heading {
+  color: #27304a;
+  font-size: clamp(36px, 4.5vw, 68px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.anh-hero-copy {
+  color: #4c556d;
+  font-size: clamp(16px, 1.5vw, 20px);
+  line-height: 1.5;
+}
+
+.anh-hero-image {
+  border-radius: 20px;
+}
+
+.anh-primary-cta {
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgb(242 123 112 / 22%);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.anh-primary-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgb(242 123 112 / 28%);
+}
+
+.anh-category-section {
+  background: #fffdf9;
+}
+
+.anh-category-heading {
+  color: #27304a;
+  font-size: clamp(28px, 3vw, 42px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.anh-category-card {
+  background: #fff;
+  border: 1px solid #ede7e5;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgb(39 48 74 / 7%);
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.anh-category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgb(39 48 74 / 12%);
+}
+
+.anh-category-image {
+  border-radius: 16px;
+}
+
+.anh-category-label {
+  color: #27304a;
+  font-size: clamp(18px, 1.8vw, 24px);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+@media (max-width: 767px) {
+  .anh-hero-card { border-radius: 18px; }
+  .anh-hero-image { border-radius: 14px; }
+  .anh-category-card { border-radius: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anh-primary-cta,
+  .anh-category-card {
+    transition: none;
+  }
+
+  .anh-primary-cta:hover,
+  .anh-category-card:hover {
+    transform: none;
+  }
+}

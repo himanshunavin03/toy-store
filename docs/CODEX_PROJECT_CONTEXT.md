@@ -364,7 +364,51 @@ The owner inspected the Local Editor after `ad88861` and reported that the saved
 
 **Official workflow references:** [About the Local Editor](https://dev.wix.com/docs/develop-websites-sdk/code-your-site/developer-environments/ides/git-integration/about-the-local-editor), [Test Code in the Local Editor](https://dev.wix.com/docs/develop-websites-sdk/code-your-site/developer-environments/ides/git-integration/test-code-in-the-local-editor), [Publishing with Git Integration](https://dev.wix.com/docs/develop-websites-sdk/code-your-site/developer-environments/ides/git-integration/publish-a-site-with-git-integration-and-wix-cli), [Wix Stores galleries](https://support.wix.com/en/article/wix-stores-adding-and-setting-up-product-galleries), [Wix Stores categories on any page](https://support.wix.com/en/article/cms-displaying-your-wix-stores-categories-on-any-page), [Editor add-on capability](https://dev.wix.com/docs/build-apps/develop-your-app/extensions/editor-extensions/about-editor-add-on-extensions).
 
+## Approved Template Candidate
+
+### RUN template candidate before canvas migration (2026-09-13)
+
+The owner changed the priority: finish and visually approve the RUN/PLAY storefront prototype **before** saving any new Studio UI version. The earlier saved-canvas migration gate below is now a future phase, not the current instruction. This pass keeps `wix.config.json` at UI version **11** and preserves the recovered Velo brand, eight root menu links, hero, seven category shortcuts, and safety guards. No catalog, product, price, inventory, CMS, cart, checkout, member, order, UI version, commit, push, or publish operation occurred.
+
+This candidate adds `src/styles/global.css` and scoped runtime classes to the known header, hero, CTA and seven category cards. Wix documents `src/styles/global.css` and `customClassList` for local-IDE/Wix Studio styling; these are RUN styling changes and do not create or save canvas elements. The CSS uses restrained pastel colors, rounded cards, subtle shadows and hover lift with a reduced-motion rule. Home additionally collapses `#section9` only if its own text still says wooden toys and `#section10` only if its own text says Best Sellers, 15%, or wooden toys; this is a guarded way to suppress the owner's reported obsolete art without assuming every generated section ID is old. The existing header/menu logic and hero/category data remain otherwise unchanged. `npm run lint`, both page-code syntax checks and `git diff --check` passed; `npx wix dev` synced version-11 types/pages and opened the Local Editor. Browser appearance at 1440, 1280, tablet and mobile awaits the owner's new RUN/PLAY check; CLI startup is not visual verification.
+
+**Candidate for owner review, not yet approved.** Statuses below distinguish the earlier owner-confirmed RUN behavior from new styling that has not been visually checked. The repository cannot create missing Wix canvas sections or a Wix Stores Product Gallery by `$w`; the generated `#gridGallery1` is typed only as an iframe, with no verified native product binding. Do not render old static product art as AnH products.
+
+| Homepage section, top to bottom | Status | Current evidence and remaining work |
+| --- | --- | --- |
+| 1. Announcement Bar | NOT IMPLEMENTED | No confirmed editable announcement element; avoid an unsupported offer. |
+| 2. Header / Navigation | VISIBLE + NEEDS POLISH | Owner previously verified brand and eight root links at 1280 px without submenu overlap. New scoped styling and mobile behavior need RUN checks. Search/account/wishlist/cart widgets remain Wix-managed and unverified. |
+| 3. Hero | VISIBLE + NEEDS POLISH | Owner previously verified AnH heading/copy, School Bags CTA and hosted hero image. New rounded pastel styling needs review; a second CTA and New Arrivals destination do not exist. |
+| 4. Shop By Category | VISIBLE + NEEDS POLISH | Owner verified seven linked text items. Seven Wix Media image assignments and new card CSS need visual verification; the saved repeater layout cannot be guaranteed as 4+3 from Velo. Subtitle/support lines need space in the canvas. |
+| 5. Popular Picks | CANVAS REQUIRED | Old `#section10` is now collapsed only when its text identifies template merchandising. `#gridGallery1` has no proven Wix Stores binding. Add/verify a native category-backed Wix Stores Product Gallery; no hard-coded product cards. |
+| 6. Back To School Banner | ASSET REQUIRED | A020/A021 not produced; a suitable confirmed banner canvas element is also missing. |
+| 7. Back To School Products | CANVAS REQUIRED | Requires another native category-backed Wix Stores Product Gallery; no static product list. |
+| 8. Benefits / Trust Strip | CANVAS REQUIRED | Four dedicated, verified canvas items are unavailable; no policy/fulfillment claims were invented. |
+| 9. Brand / Lifestyle Banner | ASSET REQUIRED | A022 not produced and no suitable confirmed canvas section. |
+| 10. Shop By Theme | ASSET REQUIRED | A030–A036 not produced; native theme categories/assignments are not set up, so cards cannot be active. |
+| 11. Trending Products | CANVAS REQUIRED | Requires a native gallery and a truthful Wix merchandising source; no popularity claim or hard-coded products. |
+| 12. Pack The Happy | ASSET REQUIRED | A023 poster/motion not produced; no confirmed section. |
+| 13. Sample Reviews | NOT IMPLEMENTED | Old template testimonials are collapsed in RUN. No invented names or review quotes were added. |
+| 14. About AnH Vibes | CANVAS REQUIRED | `#section9` is collapsed only when its text identifies wooden-toy copy; other recognizable text is replaced. Saved imagery/layout and full copy require inspection. |
+| 15. Discovery / Blog Cards | NOT IMPLEMENTED | No verified Wix Blog posts or suitable three-card section. |
+| 16. FAQ | CANVAS REQUIRED | No confirmed accordion element or approved policy answers. |
+| 17. Newsletter | CANVAS REQUIRED | Shared `#form1` exists in types, but configuration, consent and placement are unverified. |
+| 18. Complete Footer | CANVAS REQUIRED | Shared footer exists; old artwork, structure and links require canvas work. No fake contact/social details were added. |
+
+| Section | Wix Source | Hard-coded Data? | Future Dashboard Update Works? |
+| --- | --- | --- | --- |
+| Category shortcuts | Wix Catalog V3 roots; presentation labels/slugs/images are a Velo snapshot | No product data; category presentation is static | Product membership follows Wix; category renames/slugs/media require shortcut update until native binding |
+| Popular Picks / Back To School / Trending | CANVAS COMPONENT REQUIRED: native Wix Stores category-backed gallery | NO product cards/prices added | Pending gallery and real category selection |
+| Product Page | Existing Wix-managed widget candidate | NO | Expected from native Wix product record, but storefront rendering unverified |
+| Cart / Checkout | Existing Wix eCommerce widget candidates | NO | Wix-managed transaction data; visitor flow unverified |
+
+Remaining prototype assets: A001 logo, A003 mobile hero, A020–A023 campaigns/lifestyle, A030–A036 themes, A040 About, optional A050–A052 Discovery and P001–P014 accurate images for the existing Wix products. Keep the working **Shop School Bags** CTA until a real New Arrivals destination exists. Next: owner checks the new RUN styling and seven card images at desktop/mobile; fix any visible regression, then plan the unavoidable canvas elements and native galleries. Do not start the saved-canvas migration until the complete template is approved.
+
 ## Session Handoff
+
+### RUN prototype before canvas migration (2026-09-13)
+
+The current instruction supersedes the earlier saved-canvas migration gate: finish and approve the RUN template first. Only scoped CSS and class attachments for existing elements were added. UI version 11, Wix catalog and commerce data, and the recovered Velo fallbacks remain unchanged. Lint, syntax, diff checks and `wix dev` sync passed; actual new visual results await the owner's RUN/PLAY review. The [candidate table above](#approved-template-candidate) lists every section and Wix data boundary. Do not Save a new canvas version, remove fallback code, commit or push in this phase.
 
 ### Saved-canvas migration gate (2026-09-13)
 

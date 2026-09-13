@@ -1,5 +1,9 @@
 # AnH Vibes — original visual asset plan
 
+## Approved Template Candidate
+
+The RUN/PLAY prototype now uses scoped pastel styling for its existing header, hero and category elements. This code change did not create, upload, replace or verify any asset, attach product media to Wix records, or save a new canvas UI version. The desktop hero remains owner-verified in an earlier RUN/PLAY view; the seven uploaded category images remain Velo-connected with their post-change visual fit unverified. A001 logo, A003 mobile hero, A020–A023 campaign/lifestyle, A030–A036 theme, A040 About, optional A050–A052 Discovery and P001–P014 existing-product media remain required as described below. Missing art must not be substituted with wooden-toy template images or misleading saleable-product photography.
+
 These are visual specifications and an upload tracker. The owner has uploaded the desktop hero and seven main-category images to Wix Media; the remaining assets are briefs only. Do not use Harsh Stores artwork, logos, copy, product photos, or copyrighted characters. Generated visual concepts are **not** product specifications: verify actual materials, colors, capacities, included items and dimensions before attaching approved imagery to saleable Wix records. The 14 product briefs target the **existing** Wix product IDs in CODEX_PROJECT_CONTEXT.md; never create replacement product records. The requested homepage inventory is A001–A040 (22 assets: logo, two hero, seven category, four promotional/lifestyle, seven theme, one About); A050–A052 are optional Discovery images. P001–P014 are 14 separate product-image briefs.
 
 ## Visual system and production rules

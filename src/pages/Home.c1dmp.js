@@ -13,12 +13,27 @@ const categoryShortcuts = [
     { _id: '9a98a02e-664f-4d2f-b316-1d6554bfce45', label: 'Lunch Boxes', link: '/category/anh-vibes-lunch-boxes', image: 'https://static.wixstatic.com/media/339216_6ea3fe30ef0344d08403cd407e66b50f~mv2.png', alt: 'AnH Vibes lunch boxes' },
 ];
 
+// Wix Studio loads src/styles/global.css in RUN/PLAY. Classes affect only the
+// known Home elements and do not alter the saved Editor canvas.
+const addPrototypeClass = (element, className) => {
+    if (element.customClassList) {
+        element.customClassList.add(className);
+    }
+};
+
 $w.onReady(function () {
+    addPrototypeClass($w('#box41'), 'anh-hero-card');
+    addPrototypeClass($w('#imageX6'), 'anh-hero-image');
+    addPrototypeClass($w('#button6'), 'anh-primary-cta');
+    addPrototypeClass($w('#section8'), 'anh-category-section');
+
     // Only replace the confirmed template hero; the visual layout is saved in Wix Studio.
     const heroTexts = [$w('#text18'), $w('#text17')];
     const heading = heroTexts.find((element) => /Handcrafted\s+Wooden\s+Toys/i.test(element.text));
     if (heading) {
         const supportingCopy = heroTexts.find((element) => element !== heading);
+        addPrototypeClass(heading, 'anh-hero-heading');
+        addPrototypeClass(supportingCopy, 'anh-hero-copy');
         heading.text = 'Little Things. Happy Vibes.';
         supportingCopy.text = 'Bags, toys, school essentials and gifts for every little adventure.';
     }
@@ -46,9 +61,13 @@ $w.onReady(function () {
     });
     if (foundOldCategoryLabels.size === 3) {
         $w('#text19').text = 'SHOP BY CATEGORY';
+        addPrototypeClass($w('#text19'), 'anh-category-heading');
         categoryRepeater.onItemReady(($item, itemData) => {
             const label = $item('#text20');
             const image = $item('#imageX7');
+            addPrototypeClass($item('#box46'), 'anh-category-card');
+            addPrototypeClass(label, 'anh-category-label');
+            addPrototypeClass(image, 'anh-category-image');
             label.html = `<a href="${itemData.link}">${itemData.label}</a>`;
             image.src = itemData.image;
             image.link = itemData.link;
@@ -60,6 +79,21 @@ $w.onReady(function () {
         console.info('[AnH Vibes] Replaced three template category items with seven linked Wix Media image cards.');
     } else {
         console.info('[AnH Vibes] Category repeater left unchanged; template labels were not all found.');
+    }
+
+    // These generated text clusters sit in the old sections reported by the
+    // owner. Hide a whole section only when its own text still identifies
+    // wooden-toy/template merchandising; an unidentified section is retained.
+    const templateSections = [
+        { section: '#section9', texts: ['#text21', '#text22'], pattern: /wooden\s+toys?|handcrafted\s+wooden/i },
+        { section: '#section10', texts: ['#text23', '#text24', '#text25', '#text26', '#text29'], pattern: /best\s+sellers|15\s*%|wooden\s+toys?/i },
+    ];
+    for (const { section, texts, pattern } of templateSections) {
+        const sectionCopy = texts.map((id) => $w(id).text).join(' ');
+        if (pattern.test(sectionCopy)) {
+            $w(section).collapse();
+            console.info(`[AnH Vibes] Collapsed old template Home section ${section}.`);
+        }
     }
 
     // Update only recognizable template claims/copy. The related images,
