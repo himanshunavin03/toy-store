@@ -9,19 +9,19 @@ This is the persistent project memory and handoff document. Future Codex session
 - Development workflow: Wix Studio + Wix CLI + GitHub + VS Code + Codex.
 - Primary local development command: `wix dev` (also available as `npm run dev`).
 - Local repository path at initial analysis: `C:\Users\himan\OneDrive\Desktop\Toy-Store\toy-store`.
-- Wix site ID in `wix.config.json`: `b50d135b-16b5-440e-b168-47db49424421`; current `uiVersion` is `4`.
+- Wix site ID in `wix.config.json`: `b50d135b-16b5-440e-b168-47db49424421`; local `uiVersion` observed during recovery is `6` (the config change predated the recovery and was not edited here).
 
 ## Current Architecture
 
 This is a Wix Git Integration & Wix CLI repository for Velo site code, not a standalone React storefront. The checked-in application surface is page-level JavaScript under `src/pages`, shared page code in `masterPage.js`, optional backend/public code folders, Wix CLI configuration, and a development-only catalog seed script under `scripts/`. The visual page structure, embedded app widgets, widget configuration, and store data are not represented as editable application source here.
 
-The former UI MVP used Home and `masterPage.js` runtime text/button/menu overrides. After the 2026-09-13 correction below, those overrides have been removed so the saved Studio canvas/native menu is authoritative. The other 15 page-code files remain empty starter callbacks. There are no application imports, backend/public calls, data queries, or custom commerce calls. Wix-generated, ignored `.wix/types/` declarations list editor elements and provide limited evidence of the site design. They are generated local metadata, not proof of configured or working live behavior.
+Home and `masterPage.js` again contain the `ad88861` runtime text/button/menu overrides after the regression recovery below. The removal in `4349262` exposed the original template canvas, so the saved Studio canvas/native menu is not yet authoritative. The other 15 page-code files remain empty starter callbacks. There are no application imports, backend/public calls, data queries, or custom commerce calls. Wix-generated, ignored `.wix/types/` declarations list editor elements and provide limited evidence of the site design. They are generated local metadata, not proof of configured or working live behavior.
 
 Observed source path:
 
 ```text
 Wix page or embedded widget
-  -> Home.c1dmp.js / masterPage.js contain no runtime storefront override
+  -> Home.c1dmp.js / masterPage.js restore ad88861 text, CTA, and menu overrides
   -> other page callbacks remain empty
   -> no custom public/backend module
   -> no Wix Stores, eCommerce, Members, or CMS API call in visitor code
@@ -31,7 +31,7 @@ Wix-managed widget behavior may run independently of the page callbacks. Its dat
 
 ## Current Application State
 
-- Sixteen named page-code files and one `masterPage.js` exist. Home and shared code have no runtime copy/navigation update after the correction below; the other 15 page-code files remain starter stubs.
+- Sixteen named page-code files and one `masterPage.js` exist. Home and shared code again have the limited runtime copy/navigation update from `ad88861`; the other 15 page-code files remain starter stubs.
 - Generated element declarations identify a category-page iframe, cart and checkout iframes, side-cart and success-popup iframes/controllers, a thank-you iframe, wishlist and order-history iframes, and shared cart/member/navigation elements.
 - Home has generated declarations for two repeaters, a gallery iframe, images, text, and a button. Their content, links, and editor bindings are unknown.
 - The Product Page declaration identifies a slider-gallery iframe but does not establish product data binding, options, pricing, or add-to-cart behavior.
@@ -189,7 +189,7 @@ No page/backend source file imports `wix-stores`, `wix-ecom`, Wix SDK packages, 
 
 | Feature | Direct Code | Wix API | Wix Studio | Current Status | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Navigation | No runtime menu override after visual correction | Prior Catalog V3 read confirmed IDs/slugs | Configure saved native dropdown and hamburger menus | Broken Local Editor submenu reported by owner; Studio change pending | At 1280px all eight top-level links must fit; verify dropdowns and actual URLs in Preview. |
+| Navigation | `masterPage.js` restores the `ad88861` eight-item runtime menu and 36 children | Prior Catalog V3 read confirmed IDs/slugs | Saved native dropdown/hamburger styling remains future work | Runtime recovery code restored; fresh Wix Preview pending | At 1280px all eight top-level links must fit; verify dropdowns and actual URLs in Preview. |
 | Categories | Seeder prepares native taxonomy | Catalog V3 category create/query and item assignment verified | Inspect category widget and navigation | 7 roots + 36 children verified in Wix | Category-page rendering still unknown. |
 | Products | Seeder prepares 14 demo records | Catalog V3 product creation/query verified | Inspect product/store setup | 14 visible demo products verified in Wix | Existing 13 unrelated products preserved. |
 | Product Images | Future media attachment script possible | Catalog V3 product media supports Wix Media IDs/URLs | Inspect gallery and store media | No new product imagery | Original/licensed assets required. |
@@ -284,7 +284,7 @@ The catalog/data portion of Phase 1 and the initial category/product population 
 
 ## Local Storefront UI Control Boundary
 
-**Historical note:** the runtime code/status in this section describes the `ad88861` handoff and is superseded by “Visual correction and editor execution handoff” below. The generated element-ID evidence remains useful. The actual canvas was not changed by the correction.
+**Historical note:** this section describes the original `ad88861` handoff. Its runtime code was restored in the recovery entry below; the generated element-ID evidence remains useful. The actual canvas was not changed by either repository correction.
 
 The template remains visible because catalog writes change Wix Stores records, while Wix Studio stores page text, images, menus, layout, and widget settings separately. `wix dev` syncs code and opens the Local Editor; it does not rewrite the Editor canvas. Velo `$w` changes run in Preview/visitor runtime and should be confirmed there. The generated element maps identify types/IDs, not their saved text, links, images, or widget bindings.
 
@@ -310,7 +310,7 @@ Wix's [Velo Menu API](https://dev.wix.com/docs/velo/velo-only-apis/%24w/menu/men
 
 ## AnH Vibes Storefront Design Handoff (2026-09-13)
 
-**Historical note:** this describes the first handoff at `ad88861`. Its claim that the Velo menu and hero copy are still active is superseded by the correction below.
+**Historical note:** this describes the first handoff at `ad88861`. The Velo menu and hero copy were removed in `4349262`, then restored in the recovery entry below.
 
 **Architecture decision:** Wix Stores Catalog V3 remains the only product/category/price/inventory system of record. Product sections must be Wix Stores Product Galleries or other native category-backed components. The Product Page, Category Page, Side Cart, Cart, Checkout, Thank You, Members, Wishlist and Orders remain Wix-managed. No second catalog, CMS product mirror, hard-coded product cards, storefront-only prices, seeding, or catalog write was added in this design task. A manually curated gallery may still read Wix product details but will not automatically include newly added products; prefer a category-based native source for growth. Theme product discovery stays inactive until existing products are intentionally assigned to native Wix theme categories and widget behavior is checked.
 
@@ -335,6 +335,14 @@ The owner inspected the Local Editor after `ad88861` and reported that the saved
 **Control boundary:** Codex can edit Velo and docs, prepare/generate/review local assets, and verify repository checks. The owner must apply the documented Studio canvas operations, upload/select approved media, configure native galleries and menu, attach accurate product photos to the existing Wix records, save the UI version, and run browser Preview/commerce checks. No seed/catalog write, commit, push, image upload, UI-version save, or browser verification occurred in this correction.
 
 ## Session Handoff
+
+### Runtime regression recovery (2026-09-13)
+
+The owner reported that `wix dev` after `4349262` displayed the original Poppy & Lily / Shop All / Blocks & Stacking / Vehicles / Animals / Sale / Handcrafted Wooden Toys canvas, whereas the earlier `ad88861` runtime visibly displayed AnH Vibes, eight category links and “Little Things. Happy Vibes.” The exact `ad88861..4349262` diff removed both `$w.onReady` callbacks: Home's conditional hero heading/supporting copy and CTA update; and `masterPage`'s Poppy & Lily text replacement, menu helpers and `#horizontalMenu1.menuItems` assignment. Those two files alone were restored from `ad88861`. The 17-section editor checklist, asset briefs, catalog, products, categories and commerce code were not changed.
+
+`npm run lint` passed. Existing `wix dev` processes were stopped and `npx wix dev` restarted; its logs reported UI version 6 type/page sync and “Opening the Local Editor.” An isolated execution of the restored files with a representative `$w` element map asserted AnH Vibes, the eight exact top-level labels, 36 children, the desired hero heading/supporting line and School Bags CTA. This is code execution evidence, not a Wix browser Preview confirmation; CLI startup emitted no browser-side execution logs. The owner must confirm the visible result in the newly opened Local Editor/Preview. `wix.config.json` was already modified at recovery start and was not touched.
+
+**Current recovery status:** frontend runtime code restored, no commit/push, no seed/catalog/media/checkout/cart write. The design handoff remains future canvas work; do not remove the restored overrides again before the equivalent saved Studio UI is in place and verified.
 
 ### Catalog safety recheck and Wix read-back (2026-09-13)
 
@@ -379,12 +387,12 @@ The seeder was reviewed before execution. It uses the repository's configured si
 
 **Known limits:** Product images have not been added, storefront widgets and their bindings remain unverified, and the site still has unrelated older catalog records. The safety guard relies on Wix's published-URL response at run time and does not make live app data safe for experiments. The current script checks a complete single query page (up to 1,000 categories and 100 products) and refuses an incomplete result. A concurrent catalog edit between preflight and create could still cause an API conflict; no overwrite operation is used.
 
-- **Last completed task:** Corrected the first visual handoff: removed runtime hero/menu overrides, rewrote the exact 17-section Local Editor execution checklist, and reconciled final asset briefs to requested IDs. No Wix canvas or catalog change was made.
-- **Current task:** Site-owner review of the execution checklist; then manual Wix Studio canvas implementation, native catalog widget binding, original media approval/upload, UI-version save, and interactive commerce verification.
+- **Last completed task:** Restored the `ad88861` Home and master-page runtime overrides that `4349262` removed, then restarted `wix dev` and exercised the code with a representative `$w` map. Browser Preview confirmation remains pending.
+- **Current task:** Confirm recovered AnH Vibes branding, menu and hero visibly in the newly opened Local Editor/Preview; defer redesign until this is verified.
 - **Current branch:** `main`, tracking `origin/main`.
-- **Git status:** Check `git status` at review; this correction changes only the two Velo files and three docs. No commit or push made.
-- **Last commit:** `ad88861` — “Added”.
-- **Files changed in this task:** `src/pages/Home.c1dmp.js`, `src/pages/masterPage.js`, `docs/CODEX_PROJECT_CONTEXT.md`, `docs/WIX_STUDIO_IMPLEMENTATION.md`, and `docs/ANH_VIBES_ASSET_PLAN.md`. The existing local hero concept was not changed or uploaded.
-- **Validation performed:** Repository syntax/lint/diff checks; no catalog API read, Studio canvas save, or browser commerce test was performed in this task.
+- **Git status:** Recovery modifies the two Velo files and this context; `wix.config.json` was already modified before recovery and remains untouched. No commit or push made.
+- **Last commit:** `4349262` — “add”.
+- **Files changed in this task:** `src/pages/Home.c1dmp.js`, `src/pages/masterPage.js`, and `docs/CODEX_PROJECT_CONTEXT.md` only.
+- **Validation performed:** `npm run lint` passed; `npx wix dev` synced UI version 6 types/pages and opened Local Editor; isolated restored-code execution passed. No actual browser Preview check or catalog API read was performed.
 - **Outstanding questions:** Saved Studio canvas content and actual category/Product Gallery bindings; desktop width and mobile hamburger behavior; site-specific category URLs; original media approval; themes; authentic reviews/blog; operational policies; payment/shipping/tax setup; member/wishlist/order experience.
-- **Recommended next action:** Review and apply `docs/WIX_STUDIO_IMPLEMENTATION.md` in the Local Editor, beginning with the Layers audit and template removal, then native menu and product bindings. Save the UI version and verify Home → Product → Cart → Checkout in Preview.
+- **Recommended next action:** Confirm the requested recovered brand, top-level navigation, heading and supporting line in Local Editor Preview. Stop recovery there; apply the design checklist only in a later task.
