@@ -14,6 +14,8 @@ Status meanings: **Concept generated** = a local concept file exists; **Brief on
 
 **Connected** means the asset URL is assigned to the intended Velo image element. **Verified** means the owner has visually confirmed that exact image in Local Editor RUN/PLAY mode. A code assignment alone does not establish crop, spacing, or browser visibility.
 
+**Saved-canvas migration status (2026-09-13):** UI version 11 is still selected. The YES connection marks in this table refer to Velo at RUN/PLAY only. Neither the hero nor any of the seven category files has been confirmed selected as saved Studio EDIT-canvas media. No new UI version was saved during this pass. After each manual canvas media selection, record the created UI version and separately verify EDIT and RUN before changing these asset status descriptions. A001 logo and A003 mobile hero remain unproduced; the campaign, About, theme, and product-image briefs below are not connected to Wix records or the saved canvas.
+
 | Asset | Filename | Wix Media URL | Target Element | Uploaded | Connected | Verified |
 | --- | --- | --- | --- | --- | --- | --- |
 | A002 desktop hero | `hero-desktop-concept.png` | [Wix-hosted PNG](https://static.wixstatic.com/media/339216_0f44dc865743436f83f3654fe6dfef9f~mv2.png) | Home `#imageX6`; `src` and `alt` assigned in Velo | YES, owner confirmed | YES, RUN/PLAY runtime | YES, owner visually confirmed |
