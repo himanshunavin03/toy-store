@@ -20,7 +20,8 @@ $w.onReady(function () {
         }
     }
 
-    $w('#horizontalMenu1').menuItems = [
+    // Preserve child-category destinations for a future styled Studio dropdown.
+    const categoryNavigation = [
         { label: 'Home', link: '/' },
         categoryMenu('School Bags', 'school-bags', [
             ['Preschool Bags', 'preschool-bags'], ['Boys Bags', 'boys-bags'],
@@ -57,4 +58,11 @@ $w.onReady(function () {
             ['Character Lunch Boxes', 'character-lunch-boxes'], ['Lunch Sets', 'lunch-sets'],
         ]),
     ];
+
+    // The current menu canvas renders nested items over the hero. The $w Menu
+    // API cannot set dropdown position, width, or padding, so show roots only.
+    $w('#horizontalMenu1').menuItems = categoryNavigation.map(({ label, link }) => ({
+        label,
+        link,
+    }));
 });
