@@ -173,7 +173,7 @@ Direct development dependencies declared in `package.json`: `@wix/cli` (`^1.0.0`
 
 ## Data / CMS
 
-No custom CMS collection schemas, dataset IDs, collection references, `wix-data` imports, data hooks, data queries, or seed files appear in tracked source. Home-page repeaters and policy-page repeaters appear in generated element declarations, but their data sources and bindings are not recorded here. Product and category records, images, prices, inventory, policy content, member records, and orders are not contained in this repository. Inspect the Wix site's CMS and store administration to determine whether they exist and how they are connected to pages.
+No custom CMS collection schemas, dataset IDs, collection references, `wix-data` imports, data hooks, or data queries appear in tracked source. The tracked `scripts/seed-catalog.mjs` creates native Wix catalog records, not CMS records. Home-page repeaters and policy-page repeaters appear in generated element declarations, but their data sources and bindings are not recorded here. Product and category records, images, prices, inventory, policy content, member records, and orders are not contained in this repository. Inspect the Wix site's CMS and store administration to determine whether they exist and how they are connected to pages.
 
 ## Wix Stores / eCommerce
 
@@ -214,7 +214,7 @@ No page/backend source file imports `wix-stores`, `wix-ecom`, Wix SDK packages, 
 5. **Evidence discipline:** Treat page names and generated element IDs as design clues. Confirm live behavior, data, and bindings before making architecture claims or changes.
 6. **Handoff upkeep:** Read this file before future repository changes and update it after meaningful work. Do not rename existing Wix page-code files casually; their names map to pages.
 7. **Target identity:** AnH Vibes is the intended brand; “Kids Gear Shop” remains this document's original project heading until a deliberate repository/document rename. The reference store informs structure and usability, never asset or copy reuse.
-8. **Taxonomy decision pending:** Main categories, subcategories, and themes are product requirements. Their Wix Stores/CMS representation remains an architecture decision to make after inspecting actual site data and supported APIs.
+8. **Taxonomy decision:** Main categories and subcategories use the connected site's native Wix Stores Catalog V3 hierarchy. Cross-category themes remain a future architecture decision.
 9. **MVP catalog decision:** The connected site is Catalog V3. Use its native hierarchical categories, products, prices, and inventory rather than a parallel database or duplicate CMS catalog. Demo products are assigned to leaf categories; Wix's category tree supplies the parent hierarchy. Theme categories/assignments are deferred until the basic commerce flow is checked.
 10. **Development writes:** A local CLI/REST seeder is preferable to an anonymous or visitor-callable backend method for setup. Its explicit apply guard and unpublished-site check protect the connected catalog. Do not use it as runtime store logic.
 
@@ -224,6 +224,7 @@ No page/backend source file imports `wix-stores`, `wix-ecom`, Wix SDK packages, 
 2. **Persistent context document (2026-09-13):** Created this handoff file only; no application code or store functionality was changed.
 3. **AnH Vibes product-definition milestone (2026-09-13):** Recorded original-brand requirements, taxonomy, theme model, homepage/product/gift/asset direction, and a phased implementation backlog. This was documentation only; no Wix data or application functionality was changed.
 4. **Connected Wix catalog MVP setup (2026-09-13):** Verified site ID, Catalog V3, CAD currency, and unpublished status; added an idempotent local Wix REST seeder; created and API-verified 43 AnH Vibes categories/subcategories and 14 demo products while preserving 13 existing products. Started `wix dev` and verified type/page sync. Interactive shopping flow remains unverified.
+5. **Catalog safety and idempotence recheck (2026-09-13):** Hardened preflight collision detection, passed lint/syntax checks, applied the seed to the connected site with zero writes, and independently verified all 43 category IDs and 14 product IDs/prices/leaf assignments. Restarted `wix dev`; browser flow remains a manual check.
 
 ## Current Task
 
@@ -278,12 +279,55 @@ The catalog/data portion of Phase 1 and the initial category/product population 
 
 ## Session Handoff
 
-- **Last completed task:** Implemented and applied the development Catalog V3 seeder; verified the AnH Vibes categories, products, CAD prices, and idempotence through Wix API reads.
-- **Current task:** Verify the Wix-managed storefront and commerce flow interactively, then complete minimum media/navigation/configuration gaps for the local MVP.
+### Catalog safety recheck and Wix read-back (2026-09-13)
+
+The seeder was reviewed before execution. It uses the repository's configured site ID `b50d135b-16b5-440e-b168-47db49424421`, the installed Wix CLI's site-scoped token in memory, and documented Catalog V3 REST endpoints. No credentials are stored. Query, version, currency, published-URL, and product-detail requests are read-only. Potential writes are limited to creating missing categories, creating missing products with inventory, and adding products to leaf categories. There are no delete, update, or replacement calls. Apply requires the exact configured site ID, Catalog V3, CAD payment currency, and no published URLs. The script was tightened to reject duplicate category name/parent pairs, category slugs, product names, product handles, and collisions with non-demo records before writing. Existing products and categories are never overwritten. A missing product/category could be created on a future run; the current run made no writes.
+
+**Environment:** These calls target the real Wix Stores app catalog of the connected, currently unpublished Wix site. The Local Editor/Preview is not a separate catalog sandbox. The Wix Published Site URLs API returned zero URLs at execution time; that does not turn the catalog into disposable preview data.
+
+**Validation and execution:** `node --check scripts/seed-catalog.mjs`, `npm run lint`, and `git diff --check` passed. The read-only dry run found 49 total categories, 27 total products, and no planned creates. Command executed: `node scripts/seed-catalog.mjs --apply --site-id b50d135b-16b5-440e-b168-47db49424421`. Result: 0 categories created, 0 products created, 0 category assignments created, and 14 products reused. Independent Wix REST queries then returned 7 AnH root categories, 36 AnH leaves, and 14 AnH demo products; all 14 had the expected names, CAD prices, visible status, expected main-category IDs, and direct membership in the expected leaf. No duplicate AnH category slugs or demo product handles were found. The 6 pre-existing categories and 13 unrelated products remain, yielding 49 categories and 27 products in total.
+
+**Wix category IDs** (all found; none created in this recheck):
+
+| Main category (ID) | Subcategories (Wix IDs) |
+| --- | --- |
+| School Bags (`8fe8d0a5-f4fc-4b3b-b4a5-1da77dc2802a`) | Preschool Bags `01b7f7da-231f-43bc-8931-2cc84628392f`; Boys Bags `fa7041c2-1ad2-471c-be5e-2efd0a59e47e`; Girls Bags `70f192aa-bdb3-45d9-8db8-2bfcfc47c0e4`; Character Bags `aa6e7527-f96d-4dd7-8878-7e4b42a72b38`; Trolley Bags `e7adf34b-5e28-4b0e-9df5-bf1030153025`; Backpack Sets `1afb290d-c7dc-4b9a-bc7a-14bd22907185` |
+| Ladies Handbags (`d37356e5-e3ae-4791-9769-430df403c659`) | Handbags `09c4806a-0424-4232-8932-4813c9915583`; Sling Bags `b1d8dc0e-7ccb-497a-974b-36dbe7ede231`; Tote Bags `92333705-746b-4fb0-a46e-1003f5b3140c`; Wallets `7d3e0dcd-4c31-4844-94ee-2655bb940312`; Clutches `c90746ff-95dd-4987-a059-ef49eef204af` |
+| Soft Toys (`6513bc42-f7c0-4f0e-9474-b2733bec2a79`) | Teddy Bears `61e579d8-7928-4a8c-9b76-a0df36d68a1d`; Animal Plush `5a9adf54-a3b3-41bc-8ed8-7096852875b1`; Character Plush `6aa17fa8-d398-4a96-a8b5-1257dceafabb`; Large Soft Toys `f8fd5115-8502-4f1b-bbc1-f699041894c8`; Mini Soft Toys `1e0fd3e2-dfce-49eb-ab85-4ee3ea995838` |
+| Bottles (`d07cde96-3f30-44f1-adff-d1701422688d`) | Kids Bottles `82ec8d76-0b2a-45a2-83af-ea418d3ded59`; Insulated Bottles `31e00b39-6456-4283-89f6-4cd55376ad80`; Steel Bottles `be146eca-5414-42ed-bd5b-03df134f2e39`; Sippers `1d7192f6-be2a-447a-8ad8-17631776b9b4`; Character Bottles `8d5f75ae-260c-4bbc-af6a-a825721fb7c6` |
+| Stationery (`c91b348a-76b7-45e9-a7e7-19d7eecc6fc4`) | Pencil Cases `4dc05196-33ed-40a2-accc-00bb1feb36fc`; Pens & Pencils `10a5a182-b153-4529-9791-d4bbde93c76c`; Art Sets `38ff4faf-61d5-4b80-a0d5-806b1dfa7ffa`; School Sets `affbd281-9943-4988-98d9-d47583f82b4d`; Diaries & Notebooks `dfd3504b-9d54-40f1-afd1-fdd2023ac3e2` |
+| Gift Items (`a4f0d639-549f-474c-af07-f3e5698e401e`) | Birthday Gifts `310b8595-97ca-4289-92c1-1e9f12757f53`; Return Gifts `72116e91-17da-464f-8893-90f30d7a49e3`; Gifts for Girls `86f9dfa1-73d2-4fbf-965b-085757e87e25`; Gifts for Boys `3d7f7e35-f275-4e4b-8b78-b52ee4357fe6`; Gift Sets `bbf83d24-04ae-4f0c-886c-a71f76a4d645` |
+| Lunch Boxes (`9a98a02e-664f-4d2f-b316-1d6554bfce45`) | Bento Lunch Boxes `88153742-e3ac-4248-b74b-03aab0abc16d`; Steel Lunch Boxes `97b78da9-fc73-41e0-ae7e-abf2153cd565`; Compartment Lunch Boxes `9755fd4a-e51d-447b-9e36-81b01f0b516c`; Character Lunch Boxes `7d63d0ed-52d3-48d2-b869-d88523bf6cca`; Lunch Sets `66e6025e-9574-4ae3-b33f-cdcd6133ece0` |
+
+**Demo product verification** (all found; CAD price and subcategory assignment verified):
+
+| Main category | Subcategory | Product | CAD price | Wix product ID | Status |
+| --- | --- | --- | ---: | --- | --- |
+| School Bags | Preschool Bags | Galaxy Explorer Kids Backpack | $49.00 | `dc7aff67-8163-43ee-a395-20a53e1ea6a8` | VERIFIED |
+| School Bags | Girls Bags | Rainbow Dreams School Bag | $45.00 | `f4d9be60-b9b6-492c-aeb3-2afc9b6e5bea` | VERIFIED |
+| Ladies Handbags | Tote Bags | Everyday Elegance Tote | $59.00 | `b3e2d7ab-23df-44a2-bbe5-41cf2bb6da19` | VERIFIED |
+| Ladies Handbags | Sling Bags | Classic Crossbody Bag | $48.00 | `5ba276c5-8a88-44d7-908a-d80fbedea95b` | VERIFIED |
+| Soft Toys | Teddy Bears | Cuddly Teddy Bear | $29.00 | `eee69e25-1c62-4f0f-91e7-c135d0f9899d` | VERIFIED |
+| Soft Toys | Animal Plush | Happy Bunny Plush | $27.00 | `1ed3c833-a47a-4fec-b31d-aa28f3a4e4b4` | VERIFIED |
+| Bottles | Kids Bottles | Space Adventure Bottle | $22.00 | `4a06196b-978a-49fb-91dc-a3a4b9209b34` | VERIFIED |
+| Bottles | Insulated Bottles | Rainbow Insulated Bottle | $32.00 | `3905d21c-b9f7-4cfd-a281-1ecc2879e076` | VERIFIED |
+| Stationery | School Sets | Creative Kids Stationery Set | $25.00 | `2f5542b6-4ed0-4ca8-b62b-ca95b9824454` | VERIFIED |
+| Stationery | Pencil Cases | Unicorn Pencil Case | $16.00 | `1147ed11-90dc-4267-86ce-d3e0b7ca30d6` | VERIFIED |
+| Gift Items | Birthday Gifts | Birthday Surprise Gift Set | $39.00 | `37b3803f-09d1-42e2-9725-9c7c7b14d0f9` | VERIFIED |
+| Gift Items | Gift Sets | Little Joy Gift Box | $34.00 | `91d4cc04-9a86-4179-a1a4-245635834b9d` | VERIFIED |
+| Lunch Boxes | Bento Lunch Boxes | Dino Bento Lunch Box | $28.00 | `8519c1d2-4f40-4c6e-ad62-0b17ac532b08` | VERIFIED |
+| Lunch Boxes | Compartment Lunch Boxes | Rainbow Compartment Lunch Box | $26.00 | `a7f439c0-966a-461b-9b87-c8d14fc4bb6d` | VERIFIED |
+
+**Local storefront and commerce flow:** `npm run dev` (`wix dev`) synced local UI types and pages and reported “Opening the Local Editor”; this startup is **VERIFIED**. Home/category navigation, category widget rendering, product links, product-page display and price, add to cart, cart, checkout, thank-you, and order history **REQUIRE MANUAL CHECK** in the browser. No browser interaction or checkout was performed, so none of those steps is marked working. In the Local Editor, click **Preview**; navigate to **Category Page** through the Pages panel or existing storefront menu; open **School Bags → Preschool Bags** and check that **Galaxy Explorer Kids Backpack** appears; click the product and check its detail page shows **CAD $49.00** and an **Add to Cart** control; click **Add to Cart**, open the cart icon/side cart, then **Cart Page**, and proceed to **Checkout**. Record any empty page, broken link, missing image, missing payment/shipping/tax setup, or error. Stop before placing a real order or payment. If the page cannot be reached through the menu, inspect the category/product widget configuration and links in Wix Studio; the seed did not configure navigation.
+
+**Known limits:** Product images have not been added, storefront widgets and their bindings remain unverified, and the site still has unrelated older catalog records. The safety guard relies on Wix's published-URL response at run time and does not make live app data safe for experiments. The current script checks a complete single query page (up to 1,000 categories and 100 products) and refuses an incomplete result. A concurrent catalog edit between preflight and create could still cause an API conflict; no overwrite operation is used.
+
+- **Last completed task:** Rechecked seeder safety, hardened duplicate/collision detection, executed an idempotent apply with zero writes, and independently verified the connected Catalog V3 data.
+- **Current task:** Await site-owner review and interactive Wix Local Editor/Studio verification of the Category → Product → Cart → Checkout flow.
 - **Current branch:** `main`, tracking `origin/main`.
-- **Git status:** `docs/CODEX_PROJECT_CONTEXT.md` modified and `scripts/seed-catalog.mjs` untracked. No commit or push made by Codex.
-- **Last commit:** `cd40883` — “add” (the current `main` head at implementation start).
-- **Files changed in this task:** Modified `docs/CODEX_PROJECT_CONTEXT.md`; created `scripts/seed-catalog.mjs`. No page code, backend permissions, or Wix CMS was changed. The seed added catalog records; it did not delete or explicitly update pre-existing products/categories. Wix automatically added the new products to its existing `All Products` category.
-- **Validation performed:** `node --check scripts/seed-catalog.mjs`, `npm run lint`, `git diff --check`; Wix Catalog V3/CAD/unpublished preflight; one write run and two repeat runs; Wix API reads confirming 7 roots, 36 children, and all 14 demo products with prices, descriptions, visibility, inventory, and leaf assignment. `wix dev` synced types/pages and opened the Local Editor; browser commerce behavior was not exercised.
+- **Git status:** `docs/CODEX_PROJECT_CONTEXT.md` and `scripts/seed-catalog.mjs` modified; no other tracked changes. No commit or push made by Codex in this task.
+- **Last commit:** `a085e41` — “Added”.
+- **Files changed in this task:** Modified `scripts/seed-catalog.mjs` safety preflight and this handoff document only. No page code, Cart/Checkout, Wix CMS, or existing catalog data was modified by this run.
+- **Validation performed:** `node --check scripts/seed-catalog.mjs`, `npm run lint`, `git diff --check`; dry run; V3/CAD/unpublished preflight; one apply run with zero creates/assignments; independent Wix API reads confirming 7 roots, 36 children, and all 14 demo products with names, CAD prices, visibility, IDs, and leaf assignments. `wix dev` synced types/pages and reported opening the Local Editor; browser commerce behavior was not exercised.
 - **Outstanding questions:** Interactive category/product/cart/checkout behavior; original media; navigation links; payment/shipping/tax setup; theme model; customer/member/order experience; all remaining site-only unknowns above.
-- **Recommended next action:** In the Wix Local Editor or Studio preview, walk Category → Product → Cart → Checkout using a demo item; inspect product images and navigation, configure the minimum missing Wix settings, and record verified behavior before further custom code.
+- **Recommended next action:** Review the recorded Wix IDs and run the exact manual Preview walk-through above; report each observed page/cart/checkout result before any homepage or media work.

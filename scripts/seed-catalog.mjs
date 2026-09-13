@@ -60,6 +60,7 @@ const demos = [
 const slug = (value) => value.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const catalogKey = (name, parentId = '') => `${parentId}\u0000${name.toLowerCase()}`;
 const productHandle = (name) => `anh-vibes-demo-${slug(name)}`;
+const categorySlug = (rootName, leafName) => `anh-vibes-${slug(rootName)}${leafName ? `-${slug(leafName)}` : ''}`;
 
 let token;
 try {
@@ -114,15 +115,44 @@ async function main() {
 
   const categories = await listCategories();
   const products = await listProducts();
-  const categoryByKey = new Map(categories.map((category) => [catalogKey(category.name, category.parentCategory?.id), category]));
-  const existingByName = new Map(products.map((product) => [product.name.toLowerCase(), product]));
+  const categoryByKey = new Map();
+  const categoryBySlug = new Map();
+  for (const category of categories) {
+    const key = catalogKey(category.name, category.parentCategory?.id);
+    if (categoryByKey.has(key)) throw new Error(`Duplicate category name/parent for "${category.name}"; refusing ambiguous lookup.`);
+    categoryByKey.set(key, category);
+    if (category.slug) {
+      const old = categoryBySlug.get(category.slug.toLowerCase());
+      if (old) throw new Error(`Duplicate category slug "${category.slug}"; refusing ambiguous lookup.`);
+      categoryBySlug.set(category.slug.toLowerCase(), category);
+    }
+  }
+  const existingByName = new Map();
+  const existingByHandle = new Map();
+  for (const product of products) {
+    const name = product.name.toLowerCase();
+    if (existingByName.has(name)) throw new Error(`Duplicate product name "${product.name}"; refusing ambiguous lookup.`);
+    existingByName.set(name, product);
+    if (product.handle) {
+      const old = existingByHandle.get(product.handle.toLowerCase());
+      if (old) throw new Error(`Duplicate product handle "${product.handle}"; refusing ambiguous lookup.`);
+      existingByHandle.set(product.handle.toLowerCase(), product);
+    }
+  }
   const plan = { siteId, catalogVersion: version.catalogVersion, currency: 'CAD', publishedUrls: (published.urls || []).length,
     existingCategories: categories.length, existingProducts: products.length, createCategories: [], createProducts: [], reuseProducts: [] };
 
   for (const [rootName, leaves] of taxonomy) {
     const existingRoot = categoryByKey.get(catalogKey(rootName));
+    const rootSlug = categorySlug(rootName);
+    if (existingRoot && existingRoot.slug !== rootSlug) throw new Error(`Category name collision for "${rootName}" with a non-demo record; refusing to proceed.`);
+    if (categoryBySlug.has(rootSlug) && categoryBySlug.get(rootSlug) !== existingRoot) throw new Error(`Category slug collision for "${rootSlug}"; refusing to proceed.`);
     if (!existingRoot) plan.createCategories.push(rootName);
     for (const leaf of leaves) {
+      const existingLeaf = existingRoot && categoryByKey.get(catalogKey(leaf, existingRoot.id));
+      const leafSlug = categorySlug(rootName, leaf);
+      if (existingLeaf && existingLeaf.slug !== leafSlug) throw new Error(`Category name collision for "${rootName} > ${leaf}" with a non-demo record; refusing to proceed.`);
+      if (categoryBySlug.has(leafSlug) && categoryBySlug.get(leafSlug) !== existingLeaf) throw new Error(`Category slug collision for "${leafSlug}"; refusing to proceed.`);
       if (!existingRoot || !categoryByKey.has(catalogKey(leaf, existingRoot.id))) plan.createCategories.push(`${rootName} > ${leaf}`);
     }
   }
@@ -130,6 +160,9 @@ async function main() {
     const existing = existingByName.get(name.toLowerCase());
     if (existing && existing.handle !== productHandle(name)) {
       throw new Error(`Product name collision for "${name}" with a non-demo record; refusing to proceed.`);
+    }
+    if (existingByHandle.has(productHandle(name)) && existingByHandle.get(productHandle(name)) !== existing) {
+      throw new Error(`Product handle collision for "${name}"; refusing to proceed.`);
     }
     (existing ? plan.reuseProducts : plan.createProducts).push(name);
   }
@@ -144,7 +177,7 @@ async function main() {
     let root = categoryByKey.get(catalogKey(rootName));
     if (!root) {
       const response = await request('POST', '/categories/v1/categories', {
-        treeReference, category: { name: rootName, slug: `anh-vibes-${slug(rootName)}`, visible: true },
+        treeReference, category: { name: rootName, slug: categorySlug(rootName), visible: true },
       });
       root = response.category;
       if (!root?.id) throw new Error(`Wix did not return an ID for category ${rootName}.`);
@@ -155,7 +188,7 @@ async function main() {
       const key = catalogKey(leafName, root.id);
       if (categoryByKey.has(key)) continue;
       const response = await request('POST', '/categories/v1/categories', {
-        treeReference, category: { name: leafName, slug: `anh-vibes-${slug(rootName)}-${slug(leafName)}`, parentCategory: { id: root.id }, visible: true },
+        treeReference, category: { name: leafName, slug: categorySlug(rootName, leafName), parentCategory: { id: root.id }, visible: true },
       });
       const leaf = response.category;
       if (!leaf?.id) throw new Error(`Wix did not return an ID for ${rootName} > ${leafName}.`);
