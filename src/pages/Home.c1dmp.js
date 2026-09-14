@@ -1,17 +1,22 @@
 // API Reference: https://www.wix.com/velo/reference/api-overview/introduction
 // “Hello, World!” Example: https://learn-code.wix.com/en/article/hello-world
+import { to } from 'wix-location-frontend';
 
 // Navigation shortcuts to existing Wix category IDs and category-page URLs.
 // Product records, prices, stock, and product media remain Wix-managed.
 const categoryShortcuts = [
-    { _id: '8fe8d0a5-f4fc-4b3b-b4a5-1da77dc2802a', label: 'School Bags', link: '/category/anh-vibes-school-bags', image: 'https://static.wixstatic.com/media/339216_f561241ef8c84baa9e175aaaee7c1f29~mv2.png', alt: 'Colorful AnH Vibes school bags' },
-    { _id: 'd37356e5-e3ae-4791-9769-430df403c659', label: 'Ladies Handbags', link: '/category/anh-vibes-ladies-handbags', image: 'https://static.wixstatic.com/media/339216_cd05ec321106425994439a78156c80c0~mv2.png', alt: 'AnH Vibes ladies handbags' },
-    { _id: '6513bc42-f7c0-4f0e-9474-b2733bec2a79', label: 'Soft Toys', link: '/category/anh-vibes-soft-toys', image: 'https://static.wixstatic.com/media/339216_28e328c80cf246228773aac2974aace1~mv2.png', alt: 'AnH Vibes soft toys' },
-    { _id: 'd07cde96-3f30-44f1-adff-d1701422688d', label: 'Bottles', link: '/category/anh-vibes-bottles', image: 'https://static.wixstatic.com/media/339216_d28bdf6319874d299b39da2c4f51df6d~mv2.png', alt: 'AnH Vibes bottles' },
-    { _id: 'c91b348a-76b7-45e9-a7e7-19d7eecc6fc4', label: 'Stationery', link: '/category/anh-vibes-stationery', image: 'https://static.wixstatic.com/media/339216_fbb962b3f74d4522a8a4979aca0f2b65~mv2.png', alt: 'AnH Vibes stationery' },
-    { _id: 'a4f0d639-549f-474c-af07-f3e5698e401e', label: 'Gift Items', link: '/category/anh-vibes-gift-items', image: 'https://static.wixstatic.com/media/339216_5ff8f7a4c7ff4b76a745fc7ca574aa53~mv2.png', alt: 'AnH Vibes gift items' },
-    { _id: '9a98a02e-664f-4d2f-b316-1d6554bfce45', label: 'Lunch Boxes', link: '/category/anh-vibes-lunch-boxes', image: 'https://static.wixstatic.com/media/339216_6ea3fe30ef0344d08403cd407e66b50f~mv2.png', alt: 'AnH Vibes lunch boxes' },
+    { _id: '8fe8d0a5-f4fc-4b3b-b4a5-1da77dc2802a', label: 'School Bags', description: 'Ready for new adventures', link: '/category/anh-vibes-school-bags', image: 'https://static.wixstatic.com/media/339216_f561241ef8c84baa9e175aaaee7c1f29~mv2.png', alt: 'Colorful AnH Vibes school bags' },
+    { _id: 'd37356e5-e3ae-4791-9769-430df403c659', label: 'Ladies Handbags', description: 'Style for every story', link: '/category/anh-vibes-ladies-handbags', image: 'https://static.wixstatic.com/media/339216_cd05ec321106425994439a78156c80c0~mv2.png', alt: 'AnH Vibes ladies handbags' },
+    { _id: '6513bc42-f7c0-4f0e-9474-b2733bec2a79', label: 'Soft Toys', description: 'Little friends, big happiness', link: '/category/anh-vibes-soft-toys', image: 'https://static.wixstatic.com/media/339216_28e328c80cf246228773aac2974aace1~mv2.png', alt: 'AnH Vibes soft toys' },
+    { _id: 'd07cde96-3f30-44f1-adff-d1701422688d', label: 'Bottles', description: 'Sip happy, stay refreshed', link: '/category/anh-vibes-bottles', image: 'https://static.wixstatic.com/media/339216_d28bdf6319874d299b39da2c4f51df6d~mv2.png', alt: 'AnH Vibes bottles' },
+    { _id: 'c91b348a-76b7-45e9-a7e7-19d7eecc6fc4', label: 'Stationery', description: 'Create. Learn. Grow.', link: '/category/anh-vibes-stationery', image: 'https://static.wixstatic.com/media/339216_fbb962b3f74d4522a8a4979aca0f2b65~mv2.png', alt: 'AnH Vibes stationery' },
+    { _id: 'a4f0d639-549f-474c-af07-f3e5698e401e', label: 'Gift Items', description: 'For every special moment', link: '/category/anh-vibes-gift-items', image: 'https://static.wixstatic.com/media/339216_5ff8f7a4c7ff4b76a745fc7ca574aa53~mv2.png', alt: 'AnH Vibes gift items' },
+    { _id: '9a98a02e-664f-4d2f-b316-1d6554bfce45', label: 'Lunch Boxes', description: 'Happy meals on the go', link: '/category/anh-vibes-lunch-boxes', image: 'https://static.wixstatic.com/media/339216_6ea3fe30ef0344d08403cd407e66b50f~mv2.png', alt: 'AnH Vibes lunch boxes' },
 ];
+
+// Wix Media's documented fill transform supplies one actual 4:3 image crop.
+// The saved Studio image-element shape and repeater layout remain canvas settings.
+const categoryCrop = (url) => `${url}/v1/fill/w_640,h_480/file.png`;
 
 // Wix Studio loads src/styles/global.css in RUN/PLAY. Classes affect only the
 // known Home elements and do not alter the saved Editor canvas.
@@ -34,13 +39,14 @@ $w.onReady(function () {
         const supportingCopy = heroTexts.find((element) => element !== heading);
         addPrototypeClass(heading, 'anh-hero-heading');
         addPrototypeClass(supportingCopy, 'anh-hero-copy');
-        heading.text = 'Little Things. Happy Vibes.';
-        supportingCopy.text = 'Bags, toys, school essentials and gifts for every little adventure.';
+        heading.html = '<p style="color: #b35e71; font-size: 14px; font-weight: 700; letter-spacing: 2px">WELCOME TO ANH VIBES</p><h1>Little Things.<br><span style="color: #df7897">Happy Vibes.</span></h1>';
+        supportingCopy.text = 'Playful essentials, thoughtful gifts and everyday accessories for brighter days.';
     }
 
     const shopButton = $w('#button6');
-    shopButton.label = 'Shop School Bags';
-    shopButton.link = '/category/anh-vibes-school-bags';
+    shopButton.label = 'Shop All Categories →';
+    shopButton.link = '';
+    shopButton.onClick(() => $w('#section8').scrollTo());
 
     // Generated types place #imageX6 beside the hero text and CTA. RUN mode
     // must confirm this is the visible hero image, not a canvas background.
@@ -51,6 +57,7 @@ $w.onReady(function () {
     // Reuse the category repeater only when its rendered labels identify it
     // as the old three-card section. Seven items share its existing template.
     const categoryRepeater = $w('#repeater1');
+    addPrototypeClass(categoryRepeater, 'anh-category-grid');
     const oldCategoryLabels = new Set(['Blocks & Stacking', 'Vehicles', 'Animals']);
     const foundOldCategoryLabels = new Set();
     categoryRepeater.forEachItem(($item) => {
@@ -60,7 +67,7 @@ $w.onReady(function () {
         }
     });
     if (foundOldCategoryLabels.size === 3) {
-        $w('#text19').text = 'SHOP BY CATEGORY';
+        $w('#text19').html = '<p style="color: #b35e71; font-size: 14px; font-weight: 700; letter-spacing: 2px">EXPLORE OUR COLLECTION</p><h2>Shop By Category <span style="color: #df7897">♥</span></h2><p style="color: #5a6070; font-size: 17px">Discover playful essentials for every happy moment.</p>';
         addPrototypeClass($w('#text19'), 'anh-category-heading');
         categoryRepeater.onItemReady(($item, itemData) => {
             const label = $item('#text20');
@@ -68,10 +75,15 @@ $w.onReady(function () {
             addPrototypeClass($item('#box46'), 'anh-category-card');
             addPrototypeClass(label, 'anh-category-label');
             addPrototypeClass(image, 'anh-category-image');
-            label.html = `<a href="${itemData.link}">${itemData.label}</a>`;
-            image.src = itemData.image;
+            label.html = `<a href="${itemData.link}"><span style="font-size: 22px; font-weight: 700; color: #27304a">${itemData.label}</span><span style="font-size: 22px; color: #df7897"> →</span><br><span style="font-size: 14px; color: #5a6070">${itemData.description}</span></a>`;
+            image.src = categoryCrop(itemData.image);
             image.link = itemData.link;
             image.alt = itemData.alt;
+            $item('#box46').onClick(() => {
+                // The image and title remain native links for keyboard navigation.
+                // This container handler makes the card's blank area clickable.
+                to(itemData.link);
+            });
             image.expand();
             image.show();
         });

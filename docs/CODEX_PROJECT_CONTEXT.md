@@ -2,6 +2,18 @@
 
 This is the persistent project memory and handoff document. Future Codex sessions must read it before making repository changes. Update it whenever a meaningful implementation, architecture decision, Wix API integration, CMS/data change, or milestone is completed. Keep confirmed repository facts separate from Wix-site assumptions, and refresh the Session Handoff section at the end of each such task.
 
+## Current focused top-of-page iteration (2026-09-13)
+
+The owner paused all lower-homepage work after a RUN/PLAY screenshot showed mixed circular/square/rectangular category images, tiny detached labels and uneven rows. Scope is only the header, hero and Shop By Category; do not change catalog, cart, checkout, saved UI version or lower sections. The previously recovered AnH Vibes branding, eight root menu entries and uploaded hero image remain the working baseline.
+
+`#repeater1` is already one seven-item `$w.Repeater`, using its saved Studio template (`#box46`, `#imageX7`, `#text20`). The repeated data are uniform, but assigning new content cannot replace template geometry or Studio repeater layout settings. The screenshot's mixed shapes/rows persist despite shared data, so the remaining layout problem is in the saved template or how its Wix elements render; the exact offending canvas property has not been inspected. There are not seven independently coded cards. Wix documents only the repeater root CSS class, and warns against styling undocumented internal structure. A final four-plus-three centered responsive grid and identical image-element shape must therefore be set in the Studio repeater template and layout if the current scoped CSS does not achieve them.
+
+The focused code pass keeps the root-only menu and sets 15px navigation type in scoped CSS. Home now writes the requested hero eyebrow, two-line heading with pink accent, supporting line and `Shop All Categories` CTA; the CTA scrolls to `#section8`. It retains the owner-uploaded Wix hero on `#imageX6`. The category header now has the requested eyebrow, title and subtitle. Each repeater item receives the supplied marketing description, a Wix category link on text and image, a container click handler for the rest of the card, and a Wix Media `/v1/fill/w_640,h_480/file.png` crop. Scoped card/image CSS requests one rectangular 4:3 presentation, stronger typography, shared radius/shadow and restrained hover. This is a code-level attempt at a consistent reusable card; its final visible geometry and row alignment depend on the saved Wix canvas.
+
+Wix synchronization status: no UI version migration or catalog/media record write. Category IDs/slugs/marketing copy/media URLs remain local presentation shortcuts to existing Wix categories. Product names, prices, inventory, product images and commerce actions still belong to Wix. Adding a new product through Dashboard requires no change to this category layout, although changing a root category slug or marketing asset would require updating its shortcut until native binding is configured.
+
+Validation to date: `npm run lint` and `git diff --check` pass; `npx wix dev` synced local UI version 11 and printed “Opening the Local Editor.” These are CLI/code checks, not a 1280px browser visual result. A RUN/PLAY visual review of header fit, hero spacing, card crop/shape, 4+3 centering, mobile behavior and category-link clicks is pending. EDIT mode can still show the original saved wooden-toy canvas. The next safe step is to inspect RUN/PLAY and, if shapes or rows remain wrong, adjust the one repeater template and its responsive layout in Wix Studio without retiring the runtime fallback.
+
 ## Project Overview
 
 - Project: AnH Vibes, a Wix Studio e-commerce site (repository/context originally labeled Kids Gear Shop).
@@ -513,11 +525,11 @@ The seeder was reviewed before execution. It uses the repository's configured si
 
 **Known limits:** Product images have not been added, storefront widgets and their bindings remain unverified, and the site still has unrelated older catalog records. The safety guard relies on Wix's published-URL response at run time and does not make live app data safe for experiments. The current script checks a complete single query page (up to 1,000 categories and 100 products) and refuses an incomplete result. A concurrent catalog edit between preflight and create could still cause an API conflict; no overwrite operation is used.
 
-- **Last completed implementation:** Seven owner-uploaded Wix Media category images were assigned to the existing Home repeater; post-change RUN/PLAY visual confirmation remains pending.
-- **Current task:** Documented the UI-version architecture and exact migration from Velo template overrides to a saved AnH Vibes Studio canvas. No application code or canvas was changed in this audit.
+- **Last completed implementation:** Focused top-of-page Velo/CSS refinement of header type, hero copy/CTA and the existing seven-item category repeater. See the current focused iteration above; post-change 1280px RUN/PLAY visual confirmation remains pending.
+- **Current task:** Review the top-of-page RUN/PLAY result. If the seven cards still differ in shape or do not form a centered 4+3 grid, change the saved Studio repeater template/layout; do not extend work to lower sections.
 - **Current branch:** `main`, tracking `origin/main`.
-- **Git status:** `wix.config.json` already differed at task start (UI version 11 locally versus 9 in HEAD). This audit changed only `docs/CODEX_PROJECT_CONTEXT.md` and `docs/WIX_STUDIO_IMPLEMENTATION.md`. No commit or push.
+- **Git status:** Current uncommitted focused iteration modifies `src/pages/Home.c1dmp.js`, `src/styles/global.css` and this context file. `wix.config.json` remains at local UI version 11 and was not changed in this iteration. No commit or push.
 - **Last commit at task start:** `891ea68` — “add”.
-- **Validation performed:** `npm run lint` passed; the installed CLI reported version 1.1.245 and `npx wix dev` synced UI version 11/types/pages and opened the Local Editor. This is CLI evidence, not EDIT or RUN browser verification.
+- **Validation performed:** `npm run lint` and `git diff --check` passed; `npx wix dev` synced UI version 11/types/pages and opened the Local Editor. Post-change EDIT/RUN browser verification is pending.
 - **Outstanding questions:** Exact saved version-11 canvas values, seven-image layout/crop at 1280 px and mobile, actual category link navigation, native Product Gallery bindings, remaining old sections, themes, operational policies, payment/shipping/tax setup, member/wishlist/order experience.
-- **Recommended next action:** Apply and save the smallest complete AnH canvas migration in the Local Editor, verify regular Edit Site and RUN/PLAY, and only afterward retire static runtime overrides.
+- **Recommended next action:** Review header, hero and all seven cards at 1280px in RUN/PLAY, including link clicks; inspect mobile. If needed, make a focused saved-canvas edit to the existing repeater and hero layout while preserving the working runtime fallback.
