@@ -32,7 +32,6 @@ $w.onReady(function () {
 
     // Preserve child-category destinations for a future styled Studio dropdown.
     const categoryNavigation = [
-        { label: 'Home', link: '/' },
         categoryMenu('School Bags', 'school-bags', [
             ['Preschool Bags', 'preschool-bags'], ['Boys Bags', 'boys-bags'],
             ['Girls Bags', 'girls-bags'], ['Character Bags', 'character-bags'],
