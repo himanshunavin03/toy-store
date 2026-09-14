@@ -98,7 +98,6 @@ $w.onReady(function () {
     // wooden-toy/template merchandising; an unidentified section is retained.
     const templateSections = [
         { section: '#section9', texts: ['#text21', '#text22'], pattern: /wooden\s+toys?|handcrafted\s+wooden/i },
-        { section: '#section10', texts: ['#text23', '#text24', '#text25', '#text26', '#text29'], pattern: /best\s+sellers|15\s*%|wooden\s+toys?/i },
     ];
     for (const { section, texts, pattern } of templateSections) {
         const sectionCopy = texts.map((id) => $w(id).text).join(' ');
@@ -107,6 +106,11 @@ $w.onReady(function () {
             console.info(`[AnH Vibes] Collapsed old template Home section ${section}.`);
         }
     }
+
+    // Keep the existing Best Sellers area available for RUN/PLAY inspection.
+    // Its #gridGallery1 data source still needs verification in Wix Studio.
+    $w('#section10').expand();
+    $w('#section10').show();
 
     // Update only recognizable template claims/copy. The related images,
     // press logos, review identities and embedded galleries remain canvas work.
